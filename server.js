@@ -149,3 +149,18 @@ app.post('/api/bank/transfer', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running smoothly on port ${PORT}`));
+// ৬. অ্যাডমিন প্যানেল: সব কাস্টমার দেখার জন্য
+app.get('/api/admin/all-accounts', (req, res) => {
+    res.json(accounts);
+});
+
+// ৭. অ্যাডমিন প্যানেল: কাস্টমার ডিলিট বা ব্লক করার জন্য
+app.delete('/api/admin/delete-account/:accNo', (req, res) => {
+    const accNo = req.params.accNo;
+    if (accounts[accNo]) {
+        delete accounts[accNo];
+        res.json({ message: 'অ্যাকাউন্টটি ডিলিট করা হয়েছে!' });
+    } else {
+        res.status(404).json({ error: 'অ্যাকাউন্ট পাওয়া যায়নি!' });
+    }
+});

@@ -3,96 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Mutawa Group - Employees Information System</title>
+    <title>Al-Mutawa Holding (KSA) - Employees Portal</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; padding: 20px; text-align: center; color: #333; }
-        .container { max-width: 480px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        
-        /* Corporate Logo Style */
-        .main-logo { width: 100%; max-width: 240px; height: auto; margin-bottom: 10px; }
-        .user-photo { width: 90px; height: 90px; margin: 0 auto 15px; display: block; border-radius: 50%; border: 2px solid #1a237e; }
-        
-        h2 { color: #1a237e; margin-top: 5px; margin-bottom: 5px; font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
-        .subtitle { color: #666; font-size: 14px; margin-bottom: 25px; font-weight: bold; text-transform: uppercase; }
-        
-        .section { border: 1px solid #e0e0e0; padding: 20px; margin: 20px 0; border-radius: 10px; background: #fbfbfb; text-align: left; }
-        h3 { margin-top: 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; font-size: 16px; font-weight: 600; }
-        
-        label { font-weight: 600; display: block; margin-top: 12px; color: #444; font-size: 14px; }
-        input, select { width: 100%; padding: 11px; margin-top: 6px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
-        input:focus, select:focus { border-color: #1a237e; outline: none; box-shadow: 0 0 5px rgba(26,35,126,0.2); }
-        
-        button { width: 100%; padding: 12px; margin-top: 18px; font-size: 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; }
-        .btn-save { background-color: #1a237e; } 
-        .btn-save:hover { background-color: #0d1b60; }
-        .btn-search { background-color: #2e7d32; }
-        .btn-search:hover { background-color: #1b5e20; }
-        
-        .result-box { background: #edf7ed; border: 1px solid #c8e6c9; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; text-align: left; }
-        .result-box h4 { margin-top: 0; color: #1b5e20; border-bottom: 1px solid #c8e6c9; padding-bottom: 5px; }
-        .result-item { margin: 8px 0; font-size: 15px; color: #222; }
+        :root {
+            --almutawa-blue: #003399;
+            --white: #ffffff;
+            --light-bg: #f8f9fa;
+            --border-color: #dcdcdc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--white);
+            color: #333333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Main Form Content Area */
+        .content-box {
+            background-color: var(--white);
+            padding: 30px;
+            border: 2px solid var(--almutawa-blue);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        /* Logo Positioned perfectly BEFORE the company name inside the box */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .main-logo {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: inline-block;
+        }
+
+        .company-title {
+            color: var(--almutawa-blue);
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .portal-subtitle {
+            color: #666666;
+            font-size: 13px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Official Contact & Email Info Added */
+        .company-contact-info {
+            font-size: 12px;
+            color: #555555;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        /* Form Layout Styles */
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: var(--almutawa-blue);
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+            background-color: var(--white);
+            color: #333333;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--almutawa-blue);
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 51, 153, 0.15);
+        }
+
+        /* Buttons Style */
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-save {
+            background-color: var(--almutawa-blue);
+            color: var(--white);
+            border: none;
+        }
+
+        .btn-save:hover {
+            background-color: #002266;
+        }
+
+        .btn-search {
+            background-color: var(--white);
+            color: var(--almutawa-blue);
+            border: 2px solid var(--almutawa-blue);
+        }
+
+        .btn-search:hover {
+            background-color: var(--light-bg);
+        }
+
+        /* Result View Box */
+        .result-box {
+            background-color: var(--light-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+            text-align: left;
+        }
+
+        .result-box h4 {
+            margin-top: 0;
+            color: var(--almutawa-blue);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            font-size: 16px;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .result-item b {
+            color: #555555;
+            display: inline-block;
+            width: 120px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <img class="main-logo" src="https://i.ibb.co/v6XpSgD6/Al-mutwa-logo.png" alt="Al-Mutawa Group Logo">
-    
-    <h2>Employees Information System</h2>
-    <div class="subtitle">Al-Mutawa Joint Stock Co. Database</div>
-
-    <div class="section">
-        <h3>📥 Register New Employee</h3>
-        
-        <label>Select Country:</label>
-        <select id="regCountry">
-            <option value="Saudi Arabia (KSA)">Saudi Arabia (KSA)</option>
-            <option value="Kuwait (KW)">Kuwait (KW)</option>
-            <option value="United Arab Emirates (UAE)">United Arab Emirates (UAE)</option>
-            <option value="Qatar (QA)">Qatar (QA)</option>
-            <option value="Oman (OM)">Oman (OM)</option>
-            <option value="Bahrain (BH)">Bahrain (BH)</option>
-        </select>
-
-        <label>Employee Name:</label>
-        <input type="text" id="regName" placeholder="Enter full name">
-
-        <label>Iqama / National ID Number:</label>
-        <input type="text" id="regIqama" placeholder="Enter Iqama or ID number">
-
-        <label>Passport Number:</label>
-        <input type="text" id="regPassport" placeholder="Enter passport number">
-
-        <label>Mobile Number:</label>
-        <input type="text" id="regMobile" placeholder="Enter mobile number">
-
-        <button class="btn-save" onclick="saveEmployeeData()">Save Information</button>
-    </div>
-
-    <div class="section">
-        <h3>🔍 Search Employee</h3>
-        
-        <label>Search by Iqama Number:</label>
-        <input type="text" id="searchIqama" placeholder="Enter saved Iqama number">
-
-        <button class="btn-search" onclick="searchEmployeeData()">Search Database</button>
-
-        <div id="resultCard" class="result-box">
-            <div style="text-align: center;">
-                <img class="user-photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Profile">
+    <div class="main-container">
+        <div class="content-box">
+            
+            <div class="logo-container">
+                <img class="main-logo" src="./17809489999981871666950446476436.png" alt="Al-Mutawa Logo">
             </div>
-            <h4>🎯 Employee Profile Found:</h4>
-            <div class="result-item"><b>Country:</b> <span id="resCountry"></span></div>
-            <div class="result-item"><b>Name:</b> <span id="resName"></span></div>
-            <div class="result-item"><b>Iqama No:</b> <span id="resIqama"></span></div>
-            <div class="result-item"><b>Passport No:</b> <span id="resPassport"></span></div>
-            <div class="result-item"><b>Mobile No:</b> <span id="resMobile"></span></div>
+
+            <div class="company-title">Al-Mutawa Holding</div>
+            <div class="portal-subtitle">KSA Employee Database</div>
+
+            <div class="company-contact-info">
+                📞 <b>Mobile / Tel:</b> +966 11 478 2222 &nbsp;|&nbsp; ✉️ <b>Email:</b> ksa@almutawaholding.com
+            </div>
+
+            <div class="form-group">
+                <label>Country:</label>
+                <select id="regCountry" disabled>
+                    <option value="Saudi Arabia (KSA)">Saudi Arabia (KSA)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Employee Name:</label>
+                <input type="text" id="regName" placeholder="Enter full name">
+            </div>
+
+            <div class="form-group">
+                <label>Iqama / ID Number:</label>
+                <input type="number" id="regIqama" placeholder="Enter 10-digit Iqama number">
+            </div>
+
+            <div class="form-group">
+                <label>Passport Number:</label>
+                <input type="text" id="regPassport" placeholder="Enter passport number">
+            </div>
+
+            <div class="form-group">
+                <label>Mobile Number:</label>
+                <input type="tel" id="regMobile" placeholder="e.g., 05XXXXXXXX">
+            </div>
+
+            <button class="btn-save" onclick="saveEmployeeData()">Save Employee</button>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 25px 0;">
+
+            <div class="form-group">
+                <label>Search by Iqama Number:</label>
+                <input type="number" id="searchIqama" placeholder="Enter saved Iqama number">
+            </div>
+
+            <button class="btn-search" onclick="searchEmployeeData()">Search Database</button>
+
+            <div id="resultCard" class="result-box">
+                <h4>🎯 Profile Details</h4>
+                <div class="result-item"><b>Country:</b> <span id="resCountry"></span></div>
+                <div class="result-item"><b>Name:</b> <span id="resName" style="font-weight: bold; color: var(--almutawa-blue);"></span></div>
+                <div class="result-item"><b>Iqama No:</b> <span id="resIqama"></span></div>
+                <div class="result-item"><b>Passport No:</b> <span id="resPassport" style="text-transform: uppercase;"></span></div>
+                <div class="result-item"><b>Mobile No:</b> <span id="resMobile"></span></div>
+            </div>
         </div>
     </div>
-</div>
 
 <script>
-    // Save Data Function
     function saveEmployeeData() {
         const country = document.getElementById('regCountry').value;
         const name = document.getElementById('regName').value.trim();
@@ -101,38 +244,31 @@
         const mobile = document.getElementById('regMobile').value.trim();
 
         if (!name || !iqama || !passport || !mobile) {
-            alert("🚨 Please fill in all fields correctly!");
+            alert("🚨 Error: All fields must be filled!");
             return;
         }
 
-        const employeeData = {
-            country: country,
-            name: name,
-            passport: passport,
-            mobile: mobile
-        };
-
-        localStorage.setItem('almutawa_' + iqama, JSON.stringify(employeeData));
-        alert("✅ Success! Data saved for Iqama No: " + iqama);
+        const employeeData = { country, name, passport, mobile };
+        localStorage.setItem('ksa_hold_' + iqama, JSON.stringify(employeeData));
         
-        // Clear input fields
+        alert("✅ Data successfully saved for Iqama: " + iqama);
+        
         document.getElementById('regName').value = '';
         document.getElementById('regIqama').value = '';
         document.getElementById('regPassport').value = '';
         document.getElementById('regMobile').value = '';
     }
 
-    // Search Data Function
     function searchEmployeeData() {
         const sIqama = document.getElementById('searchIqama').value.trim();
         const card = document.getElementById('resultCard');
 
         if (!sIqama) {
-            alert("🚨 Please enter an Iqama number to search!");
+            alert("⚠️ Please enter an Iqama number.");
             return;
         }
 
-        const savedData = localStorage.getItem('almutawa_' + sIqama);
+        const savedData = localStorage.getItem('ksa_hold_' + sIqama);
 
         if (savedData) {
             const employee = JSON.parse(savedData);
@@ -146,7 +282,7 @@
             card.style.display = 'block';
         } else {
             card.style.display = 'none';
-            alert("❌ No record found for this Iqama number in Al-Mutawa Group Database.");
+            alert("❌ No record found for this Iqama number.");
         }
     }
 </script>

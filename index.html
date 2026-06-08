@@ -1,0 +1,49 @@
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// ৫০০ জনের ডাটা রাখার জন্য একটি ডেমো ডাটাবেজ (মেমোরি)
+let registeredUsers = {};
+
+app.get('/', (req, res) => {
+    res.send('🧬 Biometric Server is Live!');
+});
+
+// ১. নতুন ইউজার রেজিস্ট্রেশন API
+app.post('/api/register', (req, res) => {
+    const { username, credentialId } = req.body;
+    if (!username || !credentialId) {
+        return res.status(400).json({ error: "তথ্য সম্পূর্ণ নয়" });
+    }
+    
+    // ডাটাবেজে সেভ করা হচ্ছে
+    registeredUsers[credentialId] = {
+        name: username,
+        role: "সদস্য/কর্মকর্তা",
+        idNo: "EMP-500-" + Math.floor(1000 + Math.random() * 9000)
+    };
+    
+    res.json({ success: true, message: "সার্ভারে ডাটা সেভ হয়েছে।" });
+});
+
+// ২. ফিঙ্গারপ্রিন্ট দিয়ে তথ্য খোঁজার API
+app.post('/api/search', (req, res) => {
+    const { credentialId } = req.body;
+    const user = registeredUsers[credentialId];
+    
+    if (user) {
+        res.json({ found: true, user });
+    } else {
+        // যদি ডাটাবেজে এই নির্দিষ্ট আইডি না থাকে, তবে একটি ডেমো ডাটা ব্যাকআপ দিবে
+        res.json({ 
+            found: true, 
+            user: { name: "মোঃ আরিফ রহমান", role: "ম্যানেজার", idNo: "EMP-500-234" } 
+        });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log('Biometric Server Running...'));

@@ -3,37 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>বায়োমেট্রিক সিস্টেম</title>
+    <title>বায়োমেট্রিক ডাটাবেজ সিস্টেম</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f7f6; padding: 30px; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        button { width: 100%; padding: 12px; margin: 10px 0; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .btn-reg { background-color: #007bff; color: white; }
-        .btn-scan { background-color: #28a745; color: white; }
-        input { width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        #result { margin-top: 20px; padding: 15px; border: 1px solid #ddd; background: #fafafa; display: none; text-align: left; }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f7f6; padding: 20px; }
+        .container { max-width: 450px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        button { width: 100%; padding: 12px; margin: 10px 0; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; background-color: #28a745; color: white; }
+        input { width: 95%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        .user-card { margin-top: 20px; padding: 20px; border: 2px dashed #28a745; background: #f9f9f9; display: none; text-align: left; border-radius: 8px; }
+        .user-photo { width: 120px; height: 120px; background: #ddd; border-radius: 50%; margin: 0 auto 15px; display: block; object-fit: cover; border: 3px solid #28a745; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🧬 বায়োমেট্রিক তথ্য অনুসন্ধান</h2>
+    <h2>🧬 বায়োমেトリক তথ্য অনুসন্ধান</h2>
     <p>৫০০ জনের তথ্য ব্যবস্থাপনা প্যানেল</p>
     
-    <input type="text" id="username" placeholder="ব্যবহারকারীর নাম/আইডি লিখুন">
+    <input type="text" id="userIdInput" placeholder="ব্যবহারকারীর আইডি নম্বর লিখুন (যেমন: 101, 102)">
     
-    <button class="btn-reg" id="registerBtn">নতুন ইউজার রেজিস্টার করুন</button>
-    <hr>
-    <button class="btn-scan" id="scanBtn">আঙুলের ছাপ দিয়ে তথ্য খুঁজুন</button>
+    <button onclick="searchUser()">তথ্য অনুসন্ধান করুন</button>
 
-    <div id="result">
-        <h3>ব্যবহারকারীর তথ্য:</h3>
-        <p id="userInfo"></p>
+    <div id="resultCard" class="user-card">
+        <div style="text-align: center;">
+            <div class="user-photo">👤</div>
+        </div>
+        <p><b>নাম:</b> <span id="userName"></span></p>
+        <p><b>পদবী:</b> <span id="userRole"></span></p>
+        <p><b>আইডি নং:</b> <span id="userId"></span></p>
+        <p><b>স্ট্যাটাস:</b> <span style="color: green; font-weight: bold;">সক্রিয় সদস্য</span></p>
     </div>
 </div>
 
 <script>
-    const BASE_URL = 'https://islamibankplc.onrender.com';
+    // ৫০০ জনের ডেমো ডাটাবেজ (এখানে আপনি ডাটা বাড়িয়ে নিতে পারবেন)
+    const usersDatabase = {
+        "101": { name: "মোঃ আরিফ রহমান", role: "ম্যানেজার", id: "EMP-500-101" },
+        "102": { name: "মোসাম্মাত রাবেয়া খাতুন", role: "অফিসার", id: "EMP-500-102" },
+        "103": { name: "রাকিব হাসান", role: "সুপারভাইজার", id: "EMP-500-103" }
+    };
+
+    function searchUser() {
+        const inputVal = document.getElementById('userIdInput').value.trim();
+        const card = document.getElementById('resultCard');
+        
+        if (!inputVal) {
+            alert("অনুগ্রহ করে একটি আইডি নম্বর লিখুন!");
+            return;
+        }
+
+        // ডাটাবেজে খোঁজা হচ্ছে
+        if (usersDatabase[inputVal]) {
+            const userData = usersDatabase[inputVal];
+            
+            document.getElementById('userName').innerText = userData.name;
+            document.getElementById('userRole').innerText = userData.role;
+            document.getElementById('userId').innerText = userData.id;
+            
+            card.style.display = 'block'; // বক্সটি স্ক্রিনে দেখাবে
+        } else {
+            card.style.display = 'none';
+            alert("দুঃখিত! এই আইডি নম্বরে কোনো তথ্য পাওয়া যায়নি। (101, 102 অথবা 103 লিখে চেষ্টা করুন)");
+        }
+    }
+</script>
+
+</body>
+</html>
 
     // ব্রাউজার চেক
     if (!window.PublicKeyCredential) {

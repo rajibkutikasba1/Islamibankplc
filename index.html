@@ -1,49 +1,125 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বায়োমেট্রিক সিস্টেম</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f7f6; padding: 30px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        button { width: 100%; padding: 12px; margin: 10px 0; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-reg { background-color: #007bff; color: white; }
+        .btn-scan { background-color: #28a745; color: white; }
+        input { width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        #result { margin-top: 20px; padding: 15px; border: 1px solid #ddd; background: #fafafa; display: none; text-align: left; }
+    </style>
+</head>
+<body>
 
-app.use(cors());
-app.use(express.json());
+<div class="container">
+    <h2>🧬 বায়োমেট্রিক তথ্য অনুসন্ধান</h2>
+    <p>৫০০ জনের তথ্য ব্যবস্থাপনা প্যানেল</p>
+    
+    <input type="text" id="username" placeholder="ব্যবহারকারীর নাম/আইডি লিখুন">
+    
+    <button class="btn-reg" id="registerBtn">নতুন ইউজার রেজিস্টার করুন</button>
+    <hr>
+    <button class="btn-scan" id="scanBtn">আঙুলের ছাপ দিয়ে তথ্য খুঁজুন</button>
 
-// ৫০০ জনের ডাটা রাখার জন্য একটি ডেমো ডাটাবেজ (মেমোরি)
-let registeredUsers = {};
+    <div id="result">
+        <h3>ব্যবহারকারীর তথ্য:</h3>
+        <p id="userInfo"></p>
+    </div>
+</div>
 
-app.get('/', (req, res) => {
-    res.send('🧬 Biometric Server is Live!');
-});
+<script>
+    const BASE_URL = 'https://islamibankplc.onrender.com';
 
-// ১. নতুন ইউজার রেজিস্ট্রেশন API
-app.post('/api/register', (req, res) => {
-    const { username, credentialId } = req.body;
-    if (!username || !credentialId) {
-        return res.status(400).json({ error: "তথ্য সম্পূর্ণ নয়" });
+    // ব্রাউজার চেক
+    if (!window.PublicKeyCredential) {
+        alert("🚨 এই ব্রাউজার বা ডিভাইসটি ফিঙ্গারপ্রিন্ট লগইন সাপোর্ট করে না। দয়া করে Chrome বা Edge ব্যবহার করুন।");
     }
-    
-    // ডাটাবেজে সেভ করা হচ্ছে
-    registeredUsers[credentialId] = {
-        name: username,
-        role: "সদস্য/কর্মকর্তা",
-        idNo: "EMP-500-" + Math.floor(1000 + Math.random() * 9000)
-    };
-    
-    res.json({ success: true, message: "সার্ভারে ডাটা সেভ হয়েছে।" });
-});
 
-// ২. ফিঙ্গারপ্রিন্ট দিয়ে তথ্য খোঁজার API
-app.post('/api/search', (req, res) => {
-    const { credentialId } = req.body;
-    const user = registeredUsers[credentialId];
-    
-    if (user) {
-        res.json({ found: true, user });
-    } else {
-        // যদি ডাটাবেজে এই নির্দিষ্ট আইডি না থাকে, তবে একটি ডেমো ডাটা ব্যাকআপ দিবে
-        res.json({ 
-            found: true, 
-            user: { name: "মোঃ আরিফ রহমান", role: "ম্যানেজার", idNo: "EMP-500-234" } 
-        });
+    // টেক্সটকে ArrayBuffer এ রূপান্তর করার সহজ ফাংশন
+    function strToBuffer(str) {
+        return new TextEncoder().encode(str);
     }
-});
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('Biometric Server Running...'));
+    // ১. রেজিস্ট্রেশন
+    document.getElementById('registerBtn').addEventListener('click', async () => {
+        const username = document.getElementById('username').value;
+        if (!username) return alert("অনুগ্রহ করে নাম বা আইডি লিখুন");
+
+        // সিকিউর কানেকশন চেক
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+            return alert("🚨 নিরাপত্তা জনিত কারণে এই কোডটি রান করতে আপনার সাইটে HTTPS বা লাইভ সার্ভার লিংক লাগবে।");
+        }
+
+        const options = {
+            challenge: strToBuffer("secure_random_challenge_string_12345"),
+            rp: { name: "Biometric System" },
+            user: {
+                id: strToBuffer("USER_" + Date.now()),
+                name: username,
+                displayName: username
+            },
+            pubKeyCredParams: [{ alg: -7, type: "public-key" }], // ES256
+            authenticatorSelection: { authenticatorAttachment: "platform" },
+            timeout: 60000
+        };
+
+        try {
+            const credential = await navigator.credentials.create({ publicKey: options });
+            const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+
+            // সার্ভারে ডাটা পাঠানো
+            const response = await fetch(`${BASE_URL}/api/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, credentialId })
+            });
+            const resData = await response.json();
+            if(resData.success) alert("✅ আপনার ফিঙ্গারপ্রিন্ট সার্ভারে সেভ হয়েছে!");
+        } catch (err) {
+            console.error(err);
+            alert("❌ রেজিস্ট্রেশন ব্যর্থ! আপনি কি পপ-আপ বাতিল করেছেন বা ডিভাইসে লক সেট করা নেই?");
+        }
+    });
+
+    // ২. স্ক্যান ও সার্চ
+    document.getElementById('scanBtn').addEventListener('click', async () => {
+        const options = {
+            challenge: strToBuffer("secure_random_challenge_string_12345"),
+            timeout: 60000
+        };
+
+        try {
+            const assertion = await navigator.credentials.get({ publicKey: options });
+            const credentialId = btoa(String.fromCharCode(...new Uint8Array(assertion.rawId)));
+
+            // সার্ভার থেকে খোঁজা
+            const response = await fetch(`${BASE_URL}/api/search`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credentialId })
+            });
+            const resData = await response.json();
+            
+            if(resData.found) {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('userInfo').innerHTML = `
+                    <b>নাম:</b> ${resData.user.name}<br>
+                    <b>পদবী:</b> ${resData.user.role}<br>
+                    <b>আইডি নং:</b> ${resData.user.idNo}<br>
+                    <b>স্ট্যাটাস:</b> ডাটা লাইভ সার্ভার থেকে লোড হয়েছে।
+                `;
+            }
+        } catch (err) {
+            console.error(err);
+            alert("❌ ভেরিফিকেশন ব্যর্থ হয়েছে বা ফিঙ্গারপ্রিন্ট মেলেনি।");
+        }
+    });
+</script>
+
+</body>
+</html>

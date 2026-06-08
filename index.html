@@ -27,76 +27,6 @@
             box-sizing: border-box;
         }
 
-        /* পিন লক স্ক্রিন ডিজাইন */
-        .lock-screen-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #3b6ea5; /* ক্লাসিক ব্যাকগ্রাউন্ড কালার */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-        }
-        .pin-box {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 320px;
-            text-align: center;
-            border: 2px solid var(--primary-teal);
-        }
-        .pin-box h2 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-            color: var(--primary-teal);
-            text-transform: uppercase;
-        }
-        .pin-box p {
-            margin: 0 0 20px 0;
-            font-size: 12px;
-            color: #666;
-        }
-        .pin-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 18px;
-            text-align: center;
-            letter-spacing: 5px;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-        }
-        .pin-input:focus {
-            outline: none;
-            border-color: var(--primary-teal);
-        }
-        .login-btn {
-            width: 100%;
-            background: var(--primary-teal);
-            color: var(--white);
-            border: none;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-        .login-btn:hover {
-            background: var(--dark-teal);
-        }
-        .error-msg {
-            color: #e74c3c;
-            font-size: 13px;
-            font-weight: bold;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* মূল অ্যাপ্লিকেশন কাঠামো */
         .container {
             width: 100%;
             max-width: 900px;
@@ -105,7 +35,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             overflow: hidden;
             margin-top: 10px;
-            display: none; /* লগইন না হওয়া পর্যন্ত লুকানো থাকবে */
         }
 
         /* হেডার সেকশন */
@@ -235,6 +164,10 @@
             box-sizing: border-box;
             font-size: 14px;
         }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+        }
 
         /* ফটো বক্স */
         .photo-box {
@@ -276,8 +209,11 @@
             cursor: pointer;
             text-transform: uppercase;
         }
+        .submit-btn:hover {
+            background: var(--dark-teal);
+        }
 
-        /* প্রোফাইল কার্ড */
+        /* প্রোফাইল টেবিল ভিউ */
         .profile-card {
             display: flex;
             flex-direction: column;
@@ -307,41 +243,71 @@
             color: var(--primary-teal);
             width: 140px;
         }
+        .info-table .value-td {
+            color: #333;
+        }
     </style>
 </head>
 <body>
 
-    <!-- সিকিউর পিন লক স্ক্রিন ওয়ান ওভারলে -->
-    <div id="lock-screen" class="lock-screen-overlay">
-        <div class="pin-box">
-            <h2>AMSC Secure System</h2>
-            <p>অনুগ্রহ করে নিরাপত্তা পিন নম্বরটি প্রবেশ করান</p>
-            
-            <form onsubmit="checkPin(event)">
-                <input type="password" id="system-pin" class="pin-input" maxlength="6" placeholder="******" required autofocus>
-                <button type="submit" class="login-btn">Login System</button>
-            </form>
-            
-            <div id="error-alert" class="error-msg">ভুল পিন! আবার চেষ্টা করুন।</div>
-        </div>
-    </div>
-
-    <!-- মূল অ্যাপ্লিকেশন কন্টেইনার (পিন কোড ভেরিফাই হলে এটি দৃশ্যমান হবে) -->
-    <div id="main-app" class="container">
+    <div class="container">
+        <!-- হেডার টাইটেল বার -->
         <div class="header">
             <h1>AL-MUTAWA HOLDING</h1>
             <p>Employee Database Management System (AMSC)</p>
         </div>
 
+        <!-- নেভিগেশন মেনু ট্যাব -->
         <div class="tabs">
             <button id="tab-add" class="tab-btn active" onclick="switchTab('add-panel')">New Employee Entry</button>
             <button id="tab-view" class="tab-btn" onclick="switchTab('view-panel')">View Employee Profile</button>
         </div>
 
+        <!-- সার্চ বার (আইডি দিয়ে সহজে খোঁজার জন্য) -->
         <div class="search-section">
             <input type="text" id="search-id" class="search-input" placeholder="কর্মচারীর ID লিখুন (যেমন: Emp-101)">
             <button class="search-btn" onclick="searchEmployee()">Search</button>
         </div>
 
         <div class="content-body">
+            
+            <!-- ১. নতুন কর্মচারী সেভ করার প্যানেল -->
             <div id="add-panel" class="panel active">
+                <form id="employeeForm" onsubmit="saveEmployee(event); return false;">
+                    <div class="form-grid">
+                        
+                        <!-- ইনপুট ফিল্ড সমূহ -->
+                        <div class="inputs-side">
+                            <div class="form-group">
+                                <label>Employee ID *</label>
+                                <input type="text" id="emp-id" placeholder="যেমন: Emp-101" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Full Name (সম্পূর্ণ নাম) *</label>
+                                <input type="text" id="emp-name" placeholder="কর্মচারীর নাম লিখুন" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Country (দেশের নাম) *</label>
+                                <input type="text" id="emp-country" placeholder="যেমন: Bangladesh" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number *</label>
+                                <input type="text" id="emp-phone" placeholder="যেমন: +966..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Iqama Number (আকামা নম্বর) *</label>
+                                <input type="text" id="emp-iqama" placeholder="১০ ডিজিটের আকামা নম্বর" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Passport Number (পাসপোর্ট নম্বর) *</label>
+                                <input type="text" id="emp-passport" placeholder="পাসপোর্ট নম্বর লিখুন" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Designation / Role *</label>
+                                <select id="emp-role">
+                                    <option value="Employee">Employee</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Administrator">Administrator</option>
+                                </select>
+                            </div>
+                            

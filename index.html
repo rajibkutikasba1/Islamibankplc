@@ -1,159 +1,154 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>বায়োমেট্রিক ডাটাবেজ সিস্টেম</title>
+    <title>Al-Mutawa Group - Employees Information System</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f7f6; padding: 20px; }
-        .container { max-width: 450px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        button { width: 100%; padding: 12px; margin: 10px 0; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; background-color: #28a745; color: white; }
-        input { width: 95%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
-        .user-card { margin-top: 20px; padding: 20px; border: 2px dashed #28a745; background: #f9f9f9; display: none; text-align: left; border-radius: 8px; }
-        .user-photo { width: 120px; height: 120px; background: #ddd; border-radius: 50%; margin: 0 auto 15px; display: block; object-fit: cover; border: 3px solid #28a745; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; padding: 20px; text-align: center; color: #333; }
+        .container { max-width: 480px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        
+        /* Corporate Logo Style */
+        .main-logo { width: 100%; max-width: 240px; height: auto; margin-bottom: 10px; }
+        .user-photo { width: 90px; height: 90px; margin: 0 auto 15px; display: block; border-radius: 50%; border: 2px solid #1a237e; }
+        
+        h2 { color: #1a237e; margin-top: 5px; margin-bottom: 5px; font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+        .subtitle { color: #666; font-size: 14px; margin-bottom: 25px; font-weight: bold; text-transform: uppercase; }
+        
+        .section { border: 1px solid #e0e0e0; padding: 20px; margin: 20px 0; border-radius: 10px; background: #fbfbfb; text-align: left; }
+        h3 { margin-top: 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; font-size: 16px; font-weight: 600; }
+        
+        label { font-weight: 600; display: block; margin-top: 12px; color: #444; font-size: 14px; }
+        input, select { width: 100%; padding: 11px; margin-top: 6px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
+        input:focus, select:focus { border-color: #1a237e; outline: none; box-shadow: 0 0 5px rgba(26,35,126,0.2); }
+        
+        button { width: 100%; padding: 12px; margin-top: 18px; font-size: 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; }
+        .btn-save { background-color: #1a237e; } 
+        .btn-save:hover { background-color: #0d1b60; }
+        .btn-search { background-color: #2e7d32; }
+        .btn-search:hover { background-color: #1b5e20; }
+        
+        .result-box { background: #edf7ed; border: 1px solid #c8e6c9; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; text-align: left; }
+        .result-box h4 { margin-top: 0; color: #1b5e20; border-bottom: 1px solid #c8e6c9; padding-bottom: 5px; }
+        .result-item { margin: 8px 0; font-size: 15px; color: #222; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🧬 বায়োমেトリক তথ্য অনুসন্ধান</h2>
-    <p>৫০০ জনের তথ্য ব্যবস্থাপনা প্যানেল</p>
+    <img class="main-logo" src="https://i.ibb.co/v6XpSgD6/Al-mutwa-logo.png" alt="Al-Mutawa Group Logo">
     
-    <input type="text" id="userIdInput" placeholder="ব্যবহারকারীর আইডি নম্বর লিখুন (যেমন: 101, 102)">
-    
-    <button onclick="searchUser()">তথ্য অনুসন্ধান করুন</button>
+    <h2>Employees Information System</h2>
+    <div class="subtitle">Al-Mutawa Joint Stock Co. Database</div>
 
-    <div id="resultCard" class="user-card">
-        <div style="text-align: center;">
-            <div class="user-photo">👤</div>
+    <div class="section">
+        <h3>📥 Register New Employee</h3>
+        
+        <label>Select Country:</label>
+        <select id="regCountry">
+            <option value="Saudi Arabia (KSA)">Saudi Arabia (KSA)</option>
+            <option value="Kuwait (KW)">Kuwait (KW)</option>
+            <option value="United Arab Emirates (UAE)">United Arab Emirates (UAE)</option>
+            <option value="Qatar (QA)">Qatar (QA)</option>
+            <option value="Oman (OM)">Oman (OM)</option>
+            <option value="Bahrain (BH)">Bahrain (BH)</option>
+        </select>
+
+        <label>Employee Name:</label>
+        <input type="text" id="regName" placeholder="Enter full name">
+
+        <label>Iqama / National ID Number:</label>
+        <input type="text" id="regIqama" placeholder="Enter Iqama or ID number">
+
+        <label>Passport Number:</label>
+        <input type="text" id="regPassport" placeholder="Enter passport number">
+
+        <label>Mobile Number:</label>
+        <input type="text" id="regMobile" placeholder="Enter mobile number">
+
+        <button class="btn-save" onclick="saveEmployeeData()">Save Information</button>
+    </div>
+
+    <div class="section">
+        <h3>🔍 Search Employee</h3>
+        
+        <label>Search by Iqama Number:</label>
+        <input type="text" id="searchIqama" placeholder="Enter saved Iqama number">
+
+        <button class="btn-search" onclick="searchEmployeeData()">Search Database</button>
+
+        <div id="resultCard" class="result-box">
+            <div style="text-align: center;">
+                <img class="user-photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Profile">
+            </div>
+            <h4>🎯 Employee Profile Found:</h4>
+            <div class="result-item"><b>Country:</b> <span id="resCountry"></span></div>
+            <div class="result-item"><b>Name:</b> <span id="resName"></span></div>
+            <div class="result-item"><b>Iqama No:</b> <span id="resIqama"></span></div>
+            <div class="result-item"><b>Passport No:</b> <span id="resPassport"></span></div>
+            <div class="result-item"><b>Mobile No:</b> <span id="resMobile"></span></div>
         </div>
-        <p><b>নাম:</b> <span id="userName"></span></p>
-        <p><b>পদবী:</b> <span id="userRole"></span></p>
-        <p><b>আইডি নং:</b> <span id="userId"></span></p>
-        <p><b>স্ট্যাটাস:</b> <span style="color: green; font-weight: bold;">সক্রিয় সদস্য</span></p>
     </div>
 </div>
 
 <script>
-    // ৫০০ জনের ডেমো ডাটাবেজ (এখানে আপনি ডাটা বাড়িয়ে নিতে পারবেন)
-    const usersDatabase = {
-        "101": { name: "মোঃ আরিফ রহমান", role: "ম্যানেজার", id: "EMP-500-101" },
-        "102": { name: "মোসাম্মাত রাবেয়া খাতুন", role: "অফিসার", id: "EMP-500-102" },
-        "103": { name: "রাকিব হাসান", role: "সুপারভাইজার", id: "EMP-500-103" }
-    };
+    // Save Data Function
+    function saveEmployeeData() {
+        const country = document.getElementById('regCountry').value;
+        const name = document.getElementById('regName').value.trim();
+        const iqama = document.getElementById('regIqama').value.trim();
+        const passport = document.getElementById('regPassport').value.trim();
+        const mobile = document.getElementById('regMobile').value.trim();
 
-    function searchUser() {
-        const inputVal = document.getElementById('userIdInput').value.trim();
-        const card = document.getElementById('resultCard');
-        
-        if (!inputVal) {
-            alert("অনুগ্রহ করে একটি আইডি নম্বর লিখুন!");
+        if (!name || !iqama || !passport || !mobile) {
+            alert("🚨 Please fill in all fields correctly!");
             return;
         }
 
-        // ডাটাবেজে খোঁজা হচ্ছে
-        if (usersDatabase[inputVal]) {
-            const userData = usersDatabase[inputVal];
+        const employeeData = {
+            country: country,
+            name: name,
+            passport: passport,
+            mobile: mobile
+        };
+
+        localStorage.setItem('almutawa_' + iqama, JSON.stringify(employeeData));
+        alert("✅ Success! Data saved for Iqama No: " + iqama);
+        
+        // Clear input fields
+        document.getElementById('regName').value = '';
+        document.getElementById('regIqama').value = '';
+        document.getElementById('regPassport').value = '';
+        document.getElementById('regMobile').value = '';
+    }
+
+    // Search Data Function
+    function searchEmployeeData() {
+        const sIqama = document.getElementById('searchIqama').value.trim();
+        const card = document.getElementById('resultCard');
+
+        if (!sIqama) {
+            alert("🚨 Please enter an Iqama number to search!");
+            return;
+        }
+
+        const savedData = localStorage.getItem('almutawa_' + sIqama);
+
+        if (savedData) {
+            const employee = JSON.parse(savedData);
             
-            document.getElementById('userName').innerText = userData.name;
-            document.getElementById('userRole').innerText = userData.role;
-            document.getElementById('userId').innerText = userData.id;
+            document.getElementById('resCountry').innerText = employee.country;
+            document.getElementById('resName').innerText = employee.name;
+            document.getElementById('resIqama').innerText = sIqama;
+            document.getElementById('resPassport').innerText = employee.passport;
+            document.getElementById('resMobile').innerText = employee.mobile;
             
-            card.style.display = 'block'; // বক্সটি স্ক্রিনে দেখাবে
+            card.style.display = 'block';
         } else {
             card.style.display = 'none';
-            alert("দুঃখিত! এই আইডি নম্বরে কোনো তথ্য পাওয়া যায়নি। (101, 102 অথবা 103 লিখে চেষ্টা করুন)");
+            alert("❌ No record found for this Iqama number in Al-Mutawa Group Database.");
         }
     }
-</script>
-
-</body>
-</html>
-
-    // ব্রাউজার চেক
-    if (!window.PublicKeyCredential) {
-        alert("🚨 এই ব্রাউজার বা ডিভাইসটি ফিঙ্গারপ্রিন্ট লগইন সাপোর্ট করে না। দয়া করে Chrome বা Edge ব্যবহার করুন।");
-    }
-
-    // টেক্সটকে ArrayBuffer এ রূপান্তর করার সহজ ফাংশন
-    function strToBuffer(str) {
-        return new TextEncoder().encode(str);
-    }
-
-    // ১. রেজিস্ট্রেশন
-    document.getElementById('registerBtn').addEventListener('click', async () => {
-        const username = document.getElementById('username').value;
-        if (!username) return alert("অনুগ্রহ করে নাম বা আইডি লিখুন");
-
-        // সিকিউর কানেকশন চেক
-        if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-            return alert("🚨 নিরাপত্তা জনিত কারণে এই কোডটি রান করতে আপনার সাইটে HTTPS বা লাইভ সার্ভার লিংক লাগবে।");
-        }
-
-        const options = {
-            challenge: strToBuffer("secure_random_challenge_string_12345"),
-            rp: { name: "Biometric System" },
-            user: {
-                id: strToBuffer("USER_" + Date.now()),
-                name: username,
-                displayName: username
-            },
-            pubKeyCredParams: [{ alg: -7, type: "public-key" }], // ES256
-            authenticatorSelection: { authenticatorAttachment: "platform" },
-            timeout: 60000
-        };
-
-        try {
-            const credential = await navigator.credentials.create({ publicKey: options });
-            const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
-
-            // সার্ভারে ডাটা পাঠানো
-            const response = await fetch(`${BASE_URL}/api/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, credentialId })
-            });
-            const resData = await response.json();
-            if(resData.success) alert("✅ আপনার ফিঙ্গারপ্রিন্ট সার্ভারে সেভ হয়েছে!");
-        } catch (err) {
-            console.error(err);
-            alert("❌ রেজিস্ট্রেশন ব্যর্থ! আপনি কি পপ-আপ বাতিল করেছেন বা ডিভাইসে লক সেট করা নেই?");
-        }
-    });
-
-    // ২. স্ক্যান ও সার্চ
-    document.getElementById('scanBtn').addEventListener('click', async () => {
-        const options = {
-            challenge: strToBuffer("secure_random_challenge_string_12345"),
-            timeout: 60000
-        };
-
-        try {
-            const assertion = await navigator.credentials.get({ publicKey: options });
-            const credentialId = btoa(String.fromCharCode(...new Uint8Array(assertion.rawId)));
-
-            // সার্ভার থেকে খোঁজা
-            const response = await fetch(`${BASE_URL}/api/search`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ credentialId })
-            });
-            const resData = await response.json();
-            
-            if(resData.found) {
-                document.getElementById('result').style.display = 'block';
-                document.getElementById('userInfo').innerHTML = `
-                    <b>নাম:</b> ${resData.user.name}<br>
-                    <b>পদবী:</b> ${resData.user.role}<br>
-                    <b>আইডি নং:</b> ${resData.user.idNo}<br>
-                    <b>স্ট্যাটাস:</b> ডাটা লাইভ সার্ভার থেকে লোড হয়েছে।
-                `;
-            }
-        } catch (err) {
-            console.error(err);
-            alert("❌ ভেরিফিকেশন ব্যর্থ হয়েছে বা ফিঙ্গারপ্রিন্ট মেলেনি।");
-        }
-    });
 </script>
 
 </body>

@@ -1,313 +1,268 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Mutawa Holding - Employee Record System</title>
+    <title>Employee Record Management System</title>
     <style>
-        :root {
-            --primary-teal: #008080;
-            --dark-teal: #005a5a;
-            --light-bg: #f4f7f6;
-            --white: #ffffff;
-            --text-dark: #333333;
-            --border-color: #cccccc;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light-bg);
+            font-family: Arial, sans-serif;
+            background-color: #3b6ea5;
             margin: 0;
-            padding: 15px;
-            color: var(--text-dark);
+            padding: 10px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
+        }
+        .main-box {
+            width: 100%;
+            max-width: 500px;
+            background: #008080; /* Teal Color */
+            padding: 15px;
+            border: 3px double #fff;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
             box-sizing: border-box;
         }
-
-        .container {
-            width: 100%;
-            max-width: 900px;
-            background: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-top: 10px;
-        }
-
-        /* হেডার সেকশন */
-        .header {
-            background-color: var(--primary-teal);
-            color: var(--white);
+        .app-title {
+            color: white;
             text-align: center;
-            padding: 20px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 1px;
-        }
-        .header p {
-            margin: 5px 0 0 0;
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        /* নেভিগেশন ট্যাব */
-        .tabs {
-            display: flex;
-            background: #eef2f1;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            background: none;
-            border: none;
+            font-size: 20px;
             font-weight: bold;
-            color: #555;
-            cursor: pointer;
+            margin-bottom: 5px;
+        }
+        .app-sub {
+            color: #00ffff;
             text-align: center;
-            font-size: 14px;
-            transition: all 0.3s;
+            font-size: 12px;
+            margin-bottom: 20px;
         }
-        .tab-btn.active {
-            background: var(--white);
-            color: var(--primary-teal);
-            border-bottom: 3px solid var(--primary-teal);
-        }
-
-        /* সার্চ বক্স সেকশন */
-        .search-section {
-            padding: 15px;
-            background: #eef2f1;
-            display: flex;
-            gap: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .search-input {
-            flex: 1;
+        
+        /* সার্চ বক্স স্টাইল */
+        .search-area {
+            background: #d4d0c8;
             padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 14px;
+            border: 2px inset #fff;
+            margin-bottom: 15px;
         }
-        .search-btn {
-            background: var(--primary-teal);
-            color: var(--white);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+        .search-title {
             font-weight: bold;
-            cursor: pointer;
+            color: #008080;
+            font-size: 13px;
+            margin-bottom: 5px;
         }
-        .search-btn:hover {
-            background: var(--dark-teal);
+        
+        /* ইনপুট বক্স ও বাটন স্টাইল */
+        .card-body {
+            background: #d4d0c8;
+            padding: 15px;
+            border: 2px inset #fff;
         }
-
-        /* মেইন কন্টেন্ট বডি */
-        .content-body {
-            padding: 20px;
+        .input-row {
+            margin-bottom: 10px;
         }
-        .panel {
-            display: none;
-        }
-        .panel.active {
+        .input-row label {
             display: block;
+            font-weight: bold;
+            color: #008080;
+            font-size: 13px;
+            margin-bottom: 4px;
         }
-
-        /* ফর্ম লেআউট */
-        .form-grid {
-            display: flex;
-            flex-direction: column-reverse;
-            gap: 20px;
-        }
-        @media (min-width: 650px) {
-            .form-grid {
-                flex-direction: row;
-            }
-        }
-
-        .inputs-side {
-            flex: 1;
-        }
-        .photo-side {
+        .input-row input {
             width: 100%;
+            padding: 8px;
+            border: 2px inset #fff;
+            background: white;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        /* ছবি আপলোড বক্স */
+        .photo-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-        }
-        @media (min-width: 650px) {
-            .photo-side {
-                width: 160px;
-            }
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--dark-teal);
-            font-size: 13px;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
+            margin: 15px 0;
+            background: #fff;
             padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
+            border: 2px inset #fff;
         }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-teal);
-        }
-
-        /* ফটো বক্স */
-        .photo-box {
-            width: 140px;
-            height: 160px;
-            border: 2px dashed var(--primary-teal);
-            border-radius: 6px;
-            background: #fafafa;
+        .photo-frame {
+            width: 130px;
+            height: 150px;
+            border: 1px solid #808080;
+            background: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            margin-bottom: 8px;
         }
-        .photo-box img {
+        .photo-frame img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .upload-label {
-            background: #eef2f1;
-            border: 1px solid var(--primary-teal);
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-            color: var(--primary-teal);
-        }
 
-        .submit-btn {
+        /* বড় এবং স্পষ্ট বাটন */
+        .btn-style {
             width: 100%;
-            background: var(--primary-teal);
-            color: var(--white);
-            border: none;
+            background: #d4d0c8;
+            color: black;
+            border: 2px solid;
+            border-color: #fff #808080 #808080 #fff;
             padding: 12px;
-            font-size: 15px;
             font-weight: bold;
-            border-radius: 4px;
+            font-size: 14px;
             cursor: pointer;
             text-transform: uppercase;
+            margin-top: 5px;
+            box-sizing: border-box;
         }
-        .submit-btn:hover {
-            background: var(--dark-teal);
+        .btn-style:active {
+            border-color: #808080 #fff #fff #808080;
+            background: #c0c0c0;
         }
-
-        /* প্রোফাইল টেবিল ভিউ */
-        .profile-card {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            background: #fafafa;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-        }
-        @media (min-width: 600px) {
-            .profile-card {
-                flex-direction: row;
-            }
-        }
-
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .info-table td {
-            padding: 10px;
-            border-bottom: 1px solid #eeeeee;
-            font-size: 14px;
-        }
-        .info-table .label-td {
-            font-weight: bold;
-            color: var(--primary-teal);
-            width: 140px;
-        }
-        .info-table .value-td {
-            color: #333;
+        .save-btn {
+            background: #008080 !important;
+            color: white !important;
+            border-color: #00b3b3 #004d4d #004d4d #00b3b3 !important;
+            font-size: 15px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- হেডার টাইটেল বার -->
-        <div class="header">
-            <h1>AL-MUTAWA HOLDING</h1>
-            <p>Employee Database Management System (AMSC)</p>
+    <div class="main-box">
+        <div class="app-title">AL-MUTAWA HOLDING</div>
+        <div class="app-sub">AMSC Employee Record Program</div>
+
+        <!-- ১. ইনফরমেশন খোঁজার বাটন (FIND INFORMATION BOX) -->
+        <div class="search-area">
+            <div class="search-title">FIND EMPLOYEE INFORMATION (খুঁজুন):</div>
+            <input type="text" id="search-id" style="width: 100%; padding: 8px; border: 2px inset #fff; margin-bottom: 8px; box-sizing: border-box;" placeholder="Employee ID লিখুন...">
+            <button type="button" class="btn-style" onclick="findEmployee()">FIND INFORMATION</button>
         </div>
 
-        <!-- নেভিগেশন মেনু ট্যাব -->
-        <div class="tabs">
-            <button id="tab-add" class="tab-btn active" onclick="switchTab('add-panel')">New Employee Entry</button>
-            <button id="tab-view" class="tab-btn" onclick="switchTab('view-panel')">View Employee Profile</button>
-        </div>
-
-        <!-- সার্চ বার (আইডি দিয়ে সহজে খোঁজার জন্য) -->
-        <div class="search-section">
-            <input type="text" id="search-id" class="search-input" placeholder="কর্মচারীর ID লিখুন (যেমন: Emp-101)">
-            <button class="search-btn" onclick="searchEmployee()">Search</button>
-        </div>
-
-        <div class="content-body">
+        <!-- ২. নতুন ডেটা লেখার ফরম (ENTRY FORM) -->
+        <div class="card-body">
+            <div class="search-title" style="margin-bottom: 10px; border-bottom: 1px solid #008080; padding-bottom: 5px;">EMPLOYEE DATA ENTRY & VIEW:</div>
             
-            <!-- ১. নতুন কর্মচারী সেভ করার প্যানেল -->
-            <div id="add-panel" class="panel active">
-                <form id="employeeForm" onsubmit="saveEmployee(event); return false;">
-                    <div class="form-grid">
-                        
-                        <!-- ইনপুট ফিল্ড সমূহ -->
-                        <div class="inputs-side">
-                            <div class="form-group">
-                                <label>Employee ID *</label>
-                                <input type="text" id="emp-id" placeholder="যেমন: Emp-101" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Full Name (সম্পূর্ণ নাম) *</label>
-                                <input type="text" id="emp-name" placeholder="কর্মচারীর নাম লিখুন" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Country (দেশের নাম) *</label>
-                                <input type="text" id="emp-country" placeholder="যেমন: Bangladesh" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Phone Number *</label>
-                                <input type="text" id="emp-phone" placeholder="যেমন: +966..." required>
-                            </div>
-                            <div class="form-group">
-                                <label>Iqama Number (আকামা নম্বর) *</label>
-                                <input type="text" id="emp-iqama" placeholder="১০ ডিজিটের আকামা নম্বর" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Passport Number (পাসপোর্ট নম্বর) *</label>
-                                <input type="text" id="emp-passport" placeholder="পাসপোর্ট নম্বর লিখুন" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Designation / Role *</label>
-                                <select id="emp-role">
-                                    <option value="Employee">Employee</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Administrator">Administrator</option>
-                                </select>
-                            </div>
-                            
+            <div class="input-row">
+                <label>Employee ID :</label>
+                <input type="text" id="input-id" placeholder="যেমন: 101">
+            </div>
+            <div class="input-row">
+                <label>Full Name (নাম) :</label>
+                <input type="text" id="input-name">
+            </div>
+            <div class="input-row">
+                <label>Country (দেশ) :</label>
+                <input type="text" id="input-country">
+            </div>
+            <div class="input-row">
+                <label>Phone Number (মোবাইল) :</label>
+                <input type="text" id="input-phone">
+            </div>
+            <div class="input-row">
+                <label>Iqama Number (আকামা) :</label>
+                <input type="text" id="input-iqama">
+            </div>
+            <div class="input-row">
+                <label>Passport Number (পাসপোর্ট) :</label>
+                <input type="text" id="input-passport">
+            </div>
+
+            <!-- ছবি দেওয়ার ঘর -->
+            <div class="photo-section">
+                <div class="photo-frame">
+                    <img id="display-photo" src="https://placeholder.com" alt="Employee Photo">
+                </div>
+                <label class="btn-style" style="text-align: center; display: block; padding: 6px; font-size: 12px; width: auto;">
+                    SELECT PHOTO (ছবি দিন)
+                    <input type="file" id="file-input" accept="image/*" style="display:none;" onchange="uploadPhoto(this)">
+                </label>
+            </div>
+
+            <!-- ৩. ডাটা সেইভ করার বোতাম (SAVE RECORD BUTTON) -->
+            <button type="button" class="btn-style save-btn" onclick="saveEmployee()">SAVE EMPLOYEE RECORD</button>
+        </div>
+    </div>
+
+    <!-- জাভাস্ক্রিপ্ট কোড -->
+    <script>
+        // ডেটাবেজ অবজেক্ট (ব্রাউজার মেমোরি ব্যাকআপ সহ)
+        let employeeDB = JSON.parse(localStorage.getItem('AMSC_DATA_STORE')) || {};
+        let selectedPhotoBase64 = "https://placeholder.com";
+
+        // ছবি আপলোড করার লজিক
+        function uploadPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedPhotoBase64 = e.target.result;
+                    document.getElementById('display-photo').src = selectedPhotoBase64;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // ডেটা সেইভ (SAVE) করার মেকানিজম
+        function saveEmployee() {
+            const id = document.getElementById('input-id').value.trim();
+            const name = document.getElementById('input-name').value.trim();
+            const country = document.getElementById('input-country').value.trim();
+            const phone = document.getElementById('input-phone').value.trim();
+            const iqama = document.getElementById('input-iqama').value.trim();
+            const passport = document.getElementById('input-passport').value.trim();
+
+            if (!id || !name) {
+                alert("Please enter Employee ID and Full Name!");
+                return;
+            }
+
+            // অবজেক্টে ডেটা স্টোর
+            employeeDB[id] = {
+                id: id,
+                name: name,
+                country: country,
+                phone: phone,
+                iqama: iqama,
+                passport: passport,
+                photo: selectedPhotoBase64
+            };
+
+            // লোকাল স্টোরেজে পার্মানেন্ট সেভ
+            localStorage.setItem('AMSC_DATA_STORE', JSON.stringify(employeeDB));
+            alert("Employee ID: " + id + " Successfully Saved!");
+        }
+
+        // ডেটা খোঁজার বাটন (FIND INFORMATION) মেকানিজম
+        function findEmployee() {
+            const searchId = document.getElementById('search-id').value.trim();
+            
+            if (!searchId) {
+                alert("Please enter an Employee ID to find!");
+                return;
+            }
+
+            if (employeeDB[searchId]) {
+                const emp = employeeDB[searchId];
+                
+                // স্ক্রিনে ডেটা ফিরিয়ে আনা
+                document.getElementById('input-id').value = emp.id;
+                document.getElementById('input-name').value = emp.name;
+                document.getElementById('input-country').value = emp.country;
+                document.getElementById('input-phone').value = emp.phone;
+                document.getElementById('input-iqama').value = emp.iqama;
+                document.getElementById('input-passport').value = emp.passport;
+                document.getElementById('display-photo').src = emp.photo;
+                selectedPhotoBase64 = emp.photo;
+
+                alert("Employee Information Found & Loaded!");
+            } else {
+                alert("Employee ID: '" + searchId + "' not found in database!");
+            }
+        }
+    </script>
+</body>
+</html>

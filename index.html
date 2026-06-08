@@ -1,249 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Mutawa Holding - Employee Management System</title>
+    <title>Al-Mutawa Holding - Employee Record System</title>
     <style>
         :root {
-            --window-teal: #008080;
+            --primary-teal: #008080;
+            --dark-teal: #005a5a;
+            --light-bg: #f4f7f6;
             --white: #ffffff;
-            --bg-gray: #d4d0c8; 
-            --border-light: #fff;
-            --border-dark: #808080;
+            --text-dark: #333333;
+            --border-color: #cccccc;
         }
 
-        body { 
-            font-family: 'Tahoma', sans-serif; 
-            background-color: #3b6ea5; 
-            display: flex; 
-            justify-content: center; 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 15px;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            margin: 0;
-            padding: 10px;
             box-sizing: border-box;
         }
-        
-        /* মোবাইল ফ্রেন্ডলি মেইন উইন্ডো কাঠামো */
-        .window-wrapper { 
-            display: flex; 
-            flex-direction: column; /* মোবাইলের জন্য উপর-নিচে লেআউট */
-            gap: 10px; 
+
+        /* পিন লক স্ক্রিন ডিজাইন */
+        .lock-screen-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #3b6ea5; /* ক্লাসিক ব্যাকগ্রাউন্ড কালার */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+        .pin-box {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             width: 100%;
-            max-width: 1100px;
-            background: var(--window-teal);
-            padding: 10px;
-            border: 3px double #fff;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
-            box-sizing: border-box;
-        }
-
-        /* বড় স্ক্রিনের (কম্পিউটার) জন্য পাশাপাশি লেআউট */
-        @media (min-width: 768px) {
-            .window-wrapper {
-                flex-direction: row;
-                padding: 15px;
-            }
-            .left-panel {
-                width: 250px;
-            }
-        }
-
-        /* বামের প্যানেল */
-        .left-panel { 
-            width: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px;
-            background: var(--window-teal);
-            box-sizing: border-box;
-        }
-
-        .company-branding {
+            max-width: 320px;
             text-align: center;
-            background: #fff;
-            padding: 10px;
-            border: 2px inset #fff;
+            border: 2px solid var(--primary-teal);
         }
-        .company-logo {
-            width: 65px;
-            height: 65px;
-            object-fit: contain;
-            margin-bottom: 5px;
-        }
-        .company-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--window-teal);
-            margin: 0;
+        .pin-box h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: var(--primary-teal);
             text-transform: uppercase;
         }
-
-        .user-indicator {
-            color: #00ffff;
-            font-size: 13px;
-            font-weight: bold;
-            border-bottom: 1px solid #00ffff;
-            padding-bottom: 5px;
-            margin-bottom: 5px;
-            text-align: center;
-        }
-        
-        .menu-btn { 
-            padding: 12px; 
-            border: 2px solid;
-            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
-            background: var(--bg-gray); 
-            text-align: center; 
-            font-weight: bold; 
-            cursor: pointer; 
-            color: #000;
-            font-size: 13px;
-            box-shadow: inset 1px 1px 0px #fff;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .menu-btn:active, .menu-btn.active { 
-            background: #c0c0c0;
-            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
-        }
-
-        .search-container {
-            border: 2px inset #fff;
-            padding: 12px;
-            background: var(--window-teal);
-            color: #fff;
-            box-sizing: border-box;
-        }
-        .search-container label {
-            font-weight: bold;
+        .pin-box p {
+            margin: 0 0 20px 0;
             font-size: 12px;
-            display: block;
-            margin-bottom: 5px;
+            color: #666;
         }
-
-        /* ডানের মেইন ডিসপ্লে উইন্ডো */
-        .right-panel { 
-            flex: 1; 
-            background: var(--bg-gray); 
-            border: 2px solid;
-            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-        }
-
-        .window-header {
-            background: linear-gradient(90deg, #000080, #1084d0);
-            color: white;
-            padding: 6px 10px;
-            font-weight: bold;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .window-controls {
-            display: flex;
-            gap: 3px;
-        }
-        .win-btn {
-            background: var(--bg-gray);
-            border: 1px solid #fff;
-            box-shadow: 1px 1px 1px #000;
-            width: 16px;
-            height: 16px;
-            font-size: 10px;
-            font-weight: bold;
-            color: black;
+        .pin-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 18px;
             text-align: center;
-            cursor: pointer;
-            line-height: 12px;
-        }
-
-        .window-body {
-            padding: 15px;
-            flex: 1;
+            letter-spacing: 5px;
             box-sizing: border-box;
+            margin-bottom: 15px;
         }
-        
-        .view-panel { 
-            display: none; 
+        .pin-input:focus {
+            outline: none;
+            border-color: var(--primary-teal);
         }
-        .view-panel.active { 
-            display: block; 
-        }
-
-        .fieldset-box {
-            border: 2px groove #fff;
-            padding: 15px;
-            position: relative;
-            box-sizing: border-box;
-        }
-        .fieldset-title {
-            position: absolute;
-            top: -10px;
-            left: 15px;
-            background: var(--bg-gray);
-            padding: 0 5px;
+        .login-btn {
+            width: 100%;
+            background: var(--primary-teal);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            font-size: 14px;
             font-weight: bold;
-            color: var(--window-teal);
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .login-btn:hover {
+            background: var(--dark-teal);
+        }
+        .error-msg {
+            color: #e74c3c;
             font-size: 13px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
         }
 
-        /* মোবাইল ও কম্পিউটারের জন্য গ্রিড পরিবর্তন */
+        /* মূল অ্যাপ্লিকেশন কাঠামো */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 10px;
+            display: none; /* লগইন না হওয়া পর্যন্ত লুকানো থাকবে */
+        }
+
+        /* হেডার সেকশন */
+        .header {
+            background-color: var(--primary-teal);
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* নেভিগেশন ট্যাব */
+        .tabs {
+            display: flex;
+            background: #eef2f1;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: var(--white);
+            color: var(--primary-teal);
+            border-bottom: 3px solid var(--primary-teal);
+        }
+
+        /* সার্চ বক্স সেকশন */
+        .search-section {
+            padding: 15px;
+            background: #eef2f1;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .search-btn {
+            background: var(--primary-teal);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .search-btn:hover {
+            background: var(--dark-teal);
+        }
+
+        /* মেইন কন্টেন্ট বডি */
+        .content-body {
+            padding: 20px;
+        }
+        .panel {
+            display: none;
+        }
+        .panel.active {
+            display: block;
+        }
+
+        /* ফর্ম লেআউট */
         .form-grid {
             display: flex;
-            flex-direction: column-reverse; /* মোবাইলে ছবি আগে বা পরে সুন্দরভাবে দেখাবে */
-            gap: 15px;
+            flex-direction: column-reverse;
+            gap: 20px;
         }
-        @media (min-width: 600px) {
+        @media (min-width: 650px) {
             .form-grid {
                 flex-direction: row;
-                gap: 20px;
             }
         }
 
-        .fields-side {
+        .inputs-side {
             flex: 1;
-            width: 100%;
         }
-
-        .form-row {
-            display: flex;
-            flex-direction: column; /* মোবাইলে লেখা এবং বক্স উপর-নিচে থাকবে */
-            margin-bottom: 10px;
-        }
-        @media (min-width: 500px) {
-            .form-row {
-                flex-direction: row;
-                align-items: center;
-            }
-            .form-row label {
-                width: 140px;
-                text-align: right;
-                padding-right: 15px;
-                margin-bottom: 0;
-            }
-        }
-        
-        .form-row label {
-            font-weight: bold;
-            color: var(--window-teal);
-            font-size: 13px;
-            margin-bottom: 3px;
-        }
-        .form-row input, .form-row select {
-            width: 100%;
-            padding: 6px;
-            border: 2px inset #fff;
-            font-size: 13px;
-            background: #fff;
-            box-sizing: border-box;
-        }
-
         .photo-side {
             width: 100%;
             display: flex;
@@ -251,102 +211,137 @@
             align-items: center;
             gap: 10px;
         }
-        @media (min-width: 600px) {
+        @media (min-width: 650px) {
             .photo-side {
-                width: 140px;
+                width: 160px;
             }
         }
 
-        .photo-frame {
-            width: 130px;
-            height: 150px;
-            border: 2px inset #fff;
-            background: #fff;
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--dark-teal);
+            font-size: 13px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        /* ফটো বক্স */
+        .photo-box {
+            width: 140px;
+            height: 160px;
+            border: 2px dashed var(--primary-teal);
+            border-radius: 6px;
+            background: #fafafa;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
-        .photo-frame img {
+        .photo-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .file-upload-btn {
-            background: var(--bg-gray);
-            border: 1px solid #808080;
+        .upload-label {
+            background: #eef2f1;
+            border: 1px solid var(--primary-teal);
             padding: 6px 12px;
-            font-size: 11px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        .action-row {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 15px;
-        }
-        .win-save-btn {
-            padding: 8px 30px;
-            background: var(--bg-gray);
-            border: 2px solid;
-            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+            font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 13px;
-            width: 100%; /* মোবাইলে বাটন বড় হবে */
-        }
-        @media (min-width: 500px) {
-            .win-save-btn {
-                width: auto;
-            }
+            border-radius: 4px;
+            color: var(--primary-teal);
         }
 
-        .report-table {
+        .submit-btn {
             width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border: 2px inset #fff;
+            background: var(--primary-teal);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
         }
-        .report-table tr {
+
+        /* প্রোফাইল কার্ড */
+        .profile-card {
             display: flex;
-            flex-direction: column; /* মোবাইলে টেবিল ভাঙবে না */
-            border-bottom: 1px solid #d4d0c8;
+            flex-direction: column;
+            gap: 20px;
+            background: #fafafa;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
         }
-        @media (min-width: 500px) {
-            .report-table tr {
+        @media (min-width: 600px) {
+            .profile-card {
                 flex-direction: row;
             }
         }
-        .report-table td {
-            padding: 8px;
-            font-size: 13px;
+
+        .info-table {
             width: 100%;
-            box-sizing: border-box;
+            border-collapse: collapse;
         }
-        .report-table .label-cell {
-            background: #f0f0f0;
+        .info-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 14px;
+        }
+        .info-table .label-td {
             font-weight: bold;
-            color: var(--window-teal);
-        }
-        @media (min-width: 500px) {
-            .report-table .label-cell {
-                width: 150px;
-            }
+            color: var(--primary-teal);
+            width: 140px;
         }
     </style>
 </head>
 <body>
 
-    <!-- পপ-আপ মেসেজ সম্পূর্ণ মুছে দেওয়া হয়েছে, এখন আর কোনো লক স্ক্রিন আসবে না -->
+    <!-- সিকিউর পিন লক স্ক্রিন ওয়ান ওভারলে -->
+    <div id="lock-screen" class="lock-screen-overlay">
+        <div class="pin-box">
+            <h2>AMSC Secure System</h2>
+            <p>অনুগ্রহ করে নিরাপত্তা পিন নম্বরটি প্রবেশ করান</p>
+            
+            <form onsubmit="checkPin(event)">
+                <input type="password" id="system-pin" class="pin-input" maxlength="6" placeholder="******" required autofocus>
+                <button type="submit" class="login-btn">Login System</button>
+            </form>
+            
+            <div id="error-alert" class="error-msg">ভুল পিন! আবার চেষ্টা করুন।</div>
+        </div>
+    </div>
 
-    <div class="window-wrapper">
-        
-        <!-- বামের প্যানেল -->
-        <div class="left-panel">
-            <div class="company-branding">
-                <!-- লোগো ইমেজ বা প্লেসহোল্ডার টেক্সট -->
-                <div style="font-weight: bold; color: var(--window-teal); margin-bottom: 5px;">[ AMSC LOGO ]</div>
-                <h1 class="company-title">Al-Mutawa Holding</h1>
+    <!-- মূল অ্যাপ্লিকেশন কন্টেইনার (পিন কোড ভেরিফাই হলে এটি দৃশ্যমান হবে) -->
+    <div id="main-app" class="container">
+        <div class="header">
+            <h1>AL-MUTAWA HOLDING</h1>
+            <p>Employee Database Management System (AMSC)</p>
+        </div>
+
+        <div class="tabs">
+            <button id="tab-add" class="tab-btn active" onclick="switchTab('add-panel')">New Employee Entry</button>
+            <button id="tab-view" class="tab-btn" onclick="switchTab('view-panel')">View Employee Profile</button>
+        </div>
+
+        <div class="search-section">
+            <input type="text" id="search-id" class="search-input" placeholder="কর্মচারীর ID লিখুন (যেমন: Emp-101)">
+            <button class="search-btn" onclick="searchEmployee()">Search</button>
+        </div>
+
+        <div class="content-body">
+            <div id="add-panel" class="panel active">

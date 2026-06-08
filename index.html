@@ -18,29 +18,46 @@
             background-color: #3b6ea5; 
             display: flex; 
             justify-content: center; 
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
             margin: 0;
             padding: 10px;
+            box-sizing: border-box;
         }
         
+        /* মোবাইল ফ্রেন্ডলি মেইন উইন্ডো কাঠামো */
         .window-wrapper { 
             display: flex; 
+            flex-direction: column; /* মোবাইলের জন্য উপর-নিচে লেআউট */
             gap: 10px; 
             width: 100%;
             max-width: 1100px;
             background: var(--window-teal);
-            padding: 15px;
+            padding: 10px;
             border: 3px double #fff;
             box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+            box-sizing: border-box;
         }
 
+        /* বড় স্ক্রিনের (কম্পিউটার) জন্য পাশাপাশি লেআউট */
+        @media (min-width: 768px) {
+            .window-wrapper {
+                flex-direction: row;
+                padding: 15px;
+            }
+            .left-panel {
+                width: 250px;
+            }
+        }
+
+        /* বামের প্যানেল */
         .left-panel { 
-            width: 250px; 
+            width: 100%; 
             display: flex; 
             flex-direction: column; 
             gap: 12px;
             background: var(--window-teal);
+            box-sizing: border-box;
         }
 
         .company-branding {
@@ -48,7 +65,6 @@
             background: #fff;
             padding: 10px;
             border: 2px inset #fff;
-            margin-bottom: 5px;
         }
         .company-logo {
             width: 65px;
@@ -64,7 +80,6 @@
             text-transform: uppercase;
         }
 
-        /* নতুন ইউজার প্যানেল স্টাইল */
         .user-indicator {
             color: #00ffff;
             font-size: 13px;
@@ -76,7 +91,7 @@
         }
         
         .menu-btn { 
-            padding: 10px; 
+            padding: 12px; 
             border: 2px solid;
             border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
             background: var(--bg-gray); 
@@ -99,6 +114,7 @@
             padding: 12px;
             background: var(--window-teal);
             color: #fff;
+            box-sizing: border-box;
         }
         .search-container label {
             font-weight: bold;
@@ -107,6 +123,7 @@
             margin-bottom: 5px;
         }
 
+        /* ডানের মেইন ডিসপ্লে উইন্ডো */
         .right-panel { 
             flex: 1; 
             background: var(--bg-gray); 
@@ -114,6 +131,7 @@
             border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
         }
 
         .window-header {
@@ -146,8 +164,9 @@
         }
 
         .window-body {
-            padding: 20px;
+            padding: 15px;
             flex: 1;
+            box-sizing: border-box;
         }
         
         .view-panel { 
@@ -159,8 +178,9 @@
 
         .fieldset-box {
             border: 2px groove #fff;
-            padding: 20px;
+            padding: 15px;
             position: relative;
+            box-sizing: border-box;
         }
         .fieldset-title {
             position: absolute;
@@ -173,43 +193,70 @@
             font-size: 13px;
         }
 
+        /* মোবাইল ও কম্পিউটারের জন্য গ্রিড পরিবর্তন */
         .form-grid {
             display: flex;
-            gap: 20px;
+            flex-direction: column-reverse; /* মোবাইলে ছবি আগে বা পরে সুন্দরভাবে দেখাবে */
+            gap: 15px;
+        }
+        @media (min-width: 600px) {
+            .form-grid {
+                flex-direction: row;
+                gap: 20px;
+            }
         }
 
         .fields-side {
             flex: 1;
+            width: 100%;
         }
 
         .form-row {
             display: flex;
-            align-items: center;
+            flex-direction: column; /* মোবাইলে লেখা এবং বক্স উপর-নিচে থাকবে */
             margin-bottom: 10px;
         }
+        @media (min-width: 500px) {
+            .form-row {
+                flex-direction: row;
+                align-items: center;
+            }
+            .form-row label {
+                width: 140px;
+                text-align: right;
+                padding-right: 15px;
+                margin-bottom: 0;
+            }
+        }
+        
         .form-row label {
-            width: 160px;
             font-weight: bold;
             color: var(--window-teal);
             font-size: 13px;
-            text-align: right;
-            padding-right: 15px;
+            margin-bottom: 3px;
         }
         .form-row input, .form-row select {
-            flex: 1;
-            padding: 4px 6px;
+            width: 100%;
+            padding: 6px;
             border: 2px inset #fff;
             font-size: 13px;
             background: #fff;
+            box-sizing: border-box;
         }
 
         .photo-side {
-            width: 140px;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
         }
+        @media (min-width: 600px) {
+            .photo-side {
+                width: 140px;
+            }
+        }
+
         .photo-frame {
             width: 130px;
             height: 150px;
@@ -228,12 +275,12 @@
         .file-upload-btn {
             background: var(--bg-gray);
             border: 1px solid #808080;
-            padding: 4px 8px;
+            padding: 6px 12px;
             font-size: 11px;
             cursor: pointer;
-            width: 100%;
             text-align: center;
             font-weight: bold;
+            display: inline-block;
         }
 
         .action-row {
@@ -242,13 +289,19 @@
             margin-top: 15px;
         }
         .win-save-btn {
-            padding: 6px 25px;
+            padding: 8px 30px;
             background: var(--bg-gray);
             border: 2px solid;
             border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
             font-weight: bold;
             cursor: pointer;
             font-size: 13px;
+            width: 100%; /* মোবাইলে বাটন বড় হবে */
+        }
+        @media (min-width: 500px) {
+            .win-save-btn {
+                width: auto;
+            }
         }
 
         .report-table {
@@ -257,76 +310,43 @@
             background: #fff;
             border: 2px inset #fff;
         }
+        .report-table tr {
+            display: flex;
+            flex-direction: column; /* মোবাইলে টেবিল ভাঙবে না */
+            border-bottom: 1px solid #d4d0c8;
+        }
+        @media (min-width: 500px) {
+            .report-table tr {
+                flex-direction: row;
+            }
+        }
         .report-table td {
             padding: 8px;
-            border: 1px solid #d4d0c8;
             font-size: 13px;
+            width: 100%;
+            box-sizing: border-box;
         }
         .report-table .label-cell {
             background: #f0f0f0;
             font-weight: bold;
             color: var(--window-teal);
-            width: 150px;
         }
-
-        .alert-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 9999;
-        }
-        .msg-box {
-            background: var(--bg-gray);
-            width: 320px;
-            border: 2px solid;
-            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
-            box-shadow: 2px 2px 12px rgba(0,0,0,0.4);
-        }
-        .msg-body {
-            padding: 25px 20px;
-            font-size: 13px;
-            text-align: center;
-            color: #000;
-        }
-        .msg-footer {
-            padding-bottom: 15px;
-            text-align: center;
+        @media (min-width: 500px) {
+            .report-table .label-cell {
+                width: 150px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- সিকিউর মেসেজ উইন্ডো পপ-আপ -->
-    <div id="login-alert" class="alert-overlay">
-        <div class="msg-box">
-            <div class="window-header">
-                <span>Portal Notification</span>
-                <div class="window-controls"><div class="win-btn" onclick="closeAlert()">X</div></div>
-            </div>
-            <div class="msg-body">Connected to Al-Mutawa Holding Database Management System</div>
-            <div class="msg-footer">
-                <button type="button" class="win-save-btn" onclick="closeAlert()" style="padding: 4px 25px;">OK</button>
-            </div>
-        </div>
-    </div>
+    <!-- পপ-আপ মেসেজ সম্পূর্ণ মুছে দেওয়া হয়েছে, এখন আর কোনো লক স্ক্রিন আসবে না -->
 
     <div class="window-wrapper">
         
-        <!-- বামের প্যানেল (পুরোনো নাম চিরতরে মুছে দেওয়া হয়েছে) -->
+        <!-- বামের প্যানেল -->
         <div class="left-panel">
             <div class="company-branding">
-                <img class="company-logo" src="https://unsplash.com" alt="AMSC Logo">
+                <!-- লোগো ইমেজ বা প্লেসহোল্ডার টেক্সট -->
+                <div style="font-weight: bold; color: var(--window-teal); margin-bottom: 5px;">[ AMSC LOGO ]</div>
                 <h1 class="company-title">Al-Mutawa Holding</h1>
-                <span style="font-size:10px; font-weight:bold; color:#555;">AMSC SYSTEM</span>
-            </div>
-
-            <!-- এখানে আর কোনো ফিক্সড নাম বা এডমিনিস্ট্রেটর টেক্সট আসবে না -->
-            <div id="dynamic-user-indicator" class="user-indicator">Active Database Session</div>
-            
-            <button type="button" id="btn-add" class="menu-btn active" onclick="switchView('add-user-view')">Add New Employee</button>
-            <button type="button" id="btn-view" class="menu-btn" onclick="switchView('report-view')">Manage User / Bio</button>
-
-            <!-- সার্চ কন্টেইনার -->
-            <div class="search-container">
-                <label for="search-id">Find Employee ID:</label>

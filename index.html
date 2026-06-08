@@ -64,7 +64,7 @@
             text-transform: uppercase;
         }
 
-        /* ডাইনামিক ইউজার ইন্ডিকেটর */
+        /* নতুন ইউজার প্যানেল স্টাইল */
         .user-indicator {
             color: #00ffff;
             font-size: 13px;
@@ -297,24 +297,23 @@
 </head>
 <body>
 
-    <!-- পপ-আপ লগইনSecure উইন্ডো -->
+    <!-- সিকিউর মেসেজ উইন্ডো পপ-আপ -->
     <div id="login-alert" class="alert-overlay">
         <div class="msg-box">
             <div class="window-header">
-                <span>Login Secure</span>
+                <span>Portal Notification</span>
                 <div class="window-controls"><div class="win-btn" onclick="closeAlert()">X</div></div>
             </div>
-            <div class="msg-body">Welcome to Al-Mutawa Holding - AMSC Portal</div>
+            <div class="msg-body">Connected to Al-Mutawa Holding Database Management System</div>
             <div class="msg-footer">
                 <button type="button" class="win-save-btn" onclick="closeAlert()" style="padding: 4px 25px;">OK</button>
             </div>
         </div>
     </div>
 
-    <!-- মূল অ্যাপ্লিকেশন উইন্ডো কাঠামো -->
     <div class="window-wrapper">
         
-        <!-- বামের প্যানেল -->
+        <!-- বামের প্যানেল (পুরোনো নাম চিরতরে মুছে দেওয়া হয়েছে) -->
         <div class="left-panel">
             <div class="company-branding">
                 <img class="company-logo" src="https://unsplash.com" alt="AMSC Logo">
@@ -322,12 +321,12 @@
                 <span style="font-size:10px; font-weight:bold; color:#555;">AMSC SYSTEM</span>
             </div>
 
-            <!-- এটি এখন ডাইনামিক। ইউজার সার্চ বা সেভ করলে নাম ও রোল বদলে যাবে -->
-            <div id="dynamic-user-indicator" class="user-indicator">System: Guest Session</div>
+            <!-- এখানে আর কোনো ফিক্সড নাম বা এডমিনিস্ট্রেটর টেক্সট আসবে না -->
+            <div id="dynamic-user-indicator" class="user-indicator">Active Database Session</div>
             
             <button type="button" id="btn-add" class="menu-btn active" onclick="switchView('add-user-view')">Add New Employee</button>
             <button type="button" id="btn-view" class="menu-btn" onclick="switchView('report-view')">Manage User / Bio</button>
 
-            <!-- সার্চ কন্টেইনার (Find Employee ID) -->
+            <!-- সার্চ কন্টেইনার -->
             <div class="search-container">
                 <label for="search-id">Find Employee ID:</label>

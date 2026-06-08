@@ -108,7 +108,6 @@
             margin: 5px 0 2px 0;
         }
 
-        /* হেডকোয়ার্টারের নতুন এবং সঠিক কন্টাক্ট ইনফো */
         .company-info {
             font-size: 12px;
             color: #555555;
@@ -382,6 +381,7 @@
 
 <script>
     let uploadedImageBase64 = "";
+    const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
     // ছবি আপলোড এবং সাইজ অপ্টিমাইজেশন
     document.getElementById('regPhoto').addEventListener('change', function(e) {
@@ -429,21 +429,22 @@
     function updateStatusCount() {
         let count = 0;
         for (let i = 0; i < localStorage.length; i++) {
-            if (localStorage.key(i).startsWith('almutawa_global_')) {
+            const key = localStorage.key(i);
+            if (key.startsWith('almutawa_global_') || key.startsWith('almutawa_dash_') || key.startsWith('ksa_hold_')) {
                 count++;
             }
         }
         document.getElementById('totalRecordsCount').innerText = count;
     }
 
-    // ডাটা সেভ
+    // ডাটা সেভ - ভবিষ্যতের জন্য সুরক্ষীত মাস্টার কি ব্যবহার করা হচ্ছে
     function saveData() {
         const country = document.getElementById('regCountry').value;
         const name = document.getElementById('regName').value.trim();
         const iqama = document.getElementById('regIqama').value.trim();
         const passport = document.getElementById('regPassport').value.trim();
         const mobile = document.getElementById('regMobile').value.trim();
-        const photo = uploadedImageBase64 || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        const photo = uploadedImageBase64 || DEFAULT_AVATAR;
 
         if (!name || !iqama || !passport || !mobile) {
             alert("🚨 Error: All required parameters must be successfully inputted!");
@@ -451,7 +452,11 @@
         }
 
         const employeeProfile = { country, name, passport, mobile, photo };
+        
+        // সব ধরনের কি-ওয়ার্ডে একই সাথে ডাটা পুশ করা হচ্ছে যেন আগের ডাটাবেজের সাথে কোনো কোড মিসম্যাচ না হয়
         localStorage.setItem('almutawa_global_' + iqama, JSON.stringify(employeeProfile));
+        localStorage.setItem('almutawa_dash_' + iqama, JSON.stringify(employeeProfile));
+        localStorage.setItem('ksa_hold_' + iqama, JSON.stringify(employeeProfile));
         
         alert("✅ Success: Employee Profile securely locked and Digital ID generated!");
         
@@ -463,7 +468,7 @@
         uploadedImageBase64 = "";
     }
 
-    // ডাটা সার্চ
+    // ডাটা সার্চ - এটি আপনার পুরনো সব ডাটা খুঁজে বের করবে 
     function searchData() {
         const sIqama = document.getElementById('searchIqama').value.trim();
         const card = document.getElementById('resultCard');
@@ -473,11 +478,30 @@
             return;
         }
 
-        const dataRecord = localStorage.getItem('almutawa_global_' + sIqama);
+        // মাল্টি-চাবি চেকিং সিস্টেম (আগে সেভ করা যেকোনো ডাটা এখান থেকে অনায়াসে লোড হবে)
+        const dataRecord = localStorage.getItem('almutawa_global_' + sIqama) || 
+                             localStorage.getItem('almutawa_dash_' + sIqama) || 
+                             localStorage.getItem('ksa_hold_' + sIqama);
 
         if (dataRecord) {
             const data = JSON.parse(dataRecord);
             
-            document.getElementById('resCountry').innerText = data.country;
+            document.getElementById('resCountry').innerText = data.country || "Saudi Arabia (KSA)";
             document.getElementById('resName').innerText = data.name;
             document.getElementById('resIqama').innerText = sIqama;
+            document.getElementById('resPassport').innerText = data.passport ? data.passport.toUpperCase() : "N/A";
+            document.getElementById('resMobile').innerText = data.mobile || "N/A";
+            
+            // পুরনো ডাটায় ছবি না থাকলে ডিফল্ট ইউজার লগো শো করবে, ক্র্যাশ করবে না
+            document.getElementById('resPhoto').src = data.photo || DEFAULT_AVATAR;
+            
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+            alert("❌ Access Denied: No employee profile registered under this number.");
+        }
+    }
+</script>
+
+</body>
+</html>

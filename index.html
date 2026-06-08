@@ -123,7 +123,6 @@
         }
         .print-card-btn:hover { background: #006666; }
 
-        /* প্রিন্ট লেআউট ফিক্স (শুধু আইডি কার্ড প্রিন্ট করার জন্য) */
         @media print {
             body * { visibility: hidden; }
             .generated-id-card, .generated-id-card * { visibility: visible; }
@@ -167,8 +166,13 @@
                 <form id="employeeForm" onsubmit="processFormSubmission(event)">
                     <div class="form-group">
                         <label>Country :</label>
+                        <!-- আপনার চাওয়া ৪টি নির্দিষ্ট দেশ সরাসরি লোড করা হয়েছে -->
                         <select id="empCountry" required>
                             <option value="" disabled selected>Select Employee Country</option>
+                            <option value="Bangladesh">Bangladesh</option>
+                            <option value="India">India</option>
+                            <option value="Pakistan">Pakistan</option>
+                            <option value="Nepal">Nepal</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -195,19 +199,12 @@
                     <!-- বায়োমেট্রিক ফিঙ্গারপ্রিন্ট রেজিস্ট্রেশন এরিয়া -->
                     <div class="form-group">
                         <label>Biometric Registration :</label>
-                        <div id="regScannerBox" class="fingerprint-scanner-box" onclick="triggerBiometricScan('register')">
-                            <span class="fp-icon">☝️</span>
-                            <span id="regScannerText">Click to Initialize Fingerprint Scanner</span>
+                        <div id="regScannerBox" class="fingerprint-scanner-box" onclick="triggerHardwareBiometric('register')">
+                            <span class="fp-icon" id="regFpIcon">☝️</span>
+                            <span id="regScannerText">Click to Connect & Scan Hardware Fingerprint</span>
                         </div>
                         <input type="hidden" id="biometricStatus" value="false">
                     </div>
 
                     <button type="submit" class="save-btn">SAVE DETAILS & GENERATE ID</button>
                 </form>
-                <div id="addAlert" class="alert-status alert-success">Employee and Biometric data saved to system directory!</div>
-            </div>
-        </div>
-
-        <!-- ২. ডাটাবেজ অনুসন্ধান মডিউল (SEARCH DATABASE) -->
-        <div id="search-panel" class="view-panel">
-            <div class="form-section">

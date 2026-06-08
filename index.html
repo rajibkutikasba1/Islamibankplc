@@ -3,208 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Mutawa Holding - AMSC</title>
+    <title>Al-Mutawa Holding - Employee Management System</title>
     <style>
         :root {
-            --teal-color: #008080;
+            --window-teal: #008080;
             --white: #ffffff;
-            --bg-color: #f4f4f4;
-            --biometric-green: #2ecc71;
-            --danger-red: #e74c3c;
+            --bg-gray: #d4d0c8; 
+            --border-light: #fff;
+            --border-dark: #808080;
         }
 
-        body { font-family: sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; }
+        body { 
+            font-family: 'Tahoma', sans-serif; 
+            background-color: #3b6ea5; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px;
+        }
         
-        .main-wrapper { display: flex; gap: 20px; max-width: 900px; width: 100%; }
-
-        /* Left Side Panel */
-        .left-panel { width: 200px; display: flex; flex-direction: column; gap: 10px; }
-        .menu-btn { padding: 15px; border: 1px solid #ccc; background: white; text-align: center; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .menu-btn:hover, .menu-btn.active { background: var(--teal-color); color: white; }
-
-        /* Right Side Card */
-        .right-panel { flex: 1; border: 2px solid var(--teal-color); padding: 20px; background: white; }
-        .header-section { text-align: center; border-bottom: 2px solid var(--teal-color); padding-bottom: 15px; }
-        .company-logo { width: 60px; margin-bottom: 10px; }
-        .company-name { font-size: 20px; font-weight: bold; color: var(--teal-color); margin: 0; }
-        .contact-info { font-size: 12px; color: #555; margin-top: 5px; line-height: 1.4; }
-        
-        /* Forms and Routing Views */
-        .view-panel { display: none; }
-        .form-section { margin-top: 20px; border: 1px solid var(--teal-color); padding: 20px; }
-        .form-title { background: var(--teal-color); color: white; padding: 10px; margin: -20px -20px 20px -20px; font-weight: bold; text-transform: uppercase; }
-        
-        .form-group { margin-bottom: 15px; }
-        label { display: block; color: var(--teal-color); font-weight: bold; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; box-sizing: border-box; }
-        .save-btn { width: 100%; padding: 12px; background: var(--teal-color); color: white; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .save-btn:hover { background: #006666; }
-
-        /* বায়োমেট্রিক ফিঙ্গারপ্রিন্ট মডিউল */
-        .fingerprint-scanner-box {
-            border: 2px dashed #ccc;
+        .window-wrapper { 
+            display: flex; 
+            gap: 10px; 
+            width: 100%;
+            max-width: 1100px;
+            background: var(--window-teal);
             padding: 15px;
+            border: 3px double #fff;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+        }
+
+        .left-panel { 
+            width: 250px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px;
+            background: var(--window-teal);
+        }
+
+        .company-branding {
             text-align: center;
-            background: #fafafa;
-            cursor: pointer;
-            margin-top: 5px;
-            transition: all 0.3s ease;
-            user-select: none;
+            background: #fff;
+            padding: 10px;
+            border: 2px inset #fff;
+            margin-bottom: 5px;
         }
-        .fingerprint-scanner-box:hover { border-color: var(--teal-color); background: #f0f7f7; }
-        .fp-icon { font-size: 35px; display: block; margin-bottom: 5px; }
-        
-        /* লাইভ স্ক্যানিং অ্যানিমেশন */
-        .scanning-active {
-            animation: fpPulse 1.5s infinite;
-            background: #e8f8f5;
-            color: var(--teal-color);
-            border-color: var(--teal-color);
+        .company-logo {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            margin-bottom: 5px;
         }
-        @keyframes fpPulse {
-            0% { opacity: 0.6; transform: scale(0.99); }
-            50% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0.6; transform: scale(0.99); }
+        .company-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--window-teal);
+            margin: 0;
+            text-transform: uppercase;
         }
 
-        /* জেনারেটেড কর্পোরেট আইডি কার্ড */
-        .generated-id-card {
-            border: 2px solid var(--teal-color);
-            padding: 15px;
-            margin-top: 20px;
+        /* ডাইনামিক ইউজার ইন্ডিকেটর */
+        .user-indicator {
+            color: #00ffff;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #00ffff;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .menu-btn { 
+            padding: 10px; 
+            border: 2px solid;
+            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+            background: var(--bg-gray); 
+            text-align: center; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #000;
+            font-size: 13px;
+            box-shadow: inset 1px 1px 0px #fff;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .menu-btn:active, .menu-btn.active { 
+            background: #c0c0c0;
+            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+        }
+
+        .search-container {
+            border: 2px inset #fff;
+            padding: 12px;
+            background: var(--window-teal);
+            color: #fff;
+        }
+        .search-container label {
+            font-weight: bold;
+            font-size: 12px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .right-panel { 
+            flex: 1; 
+            background: var(--bg-gray); 
+            border: 2px solid;
+            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
             display: flex;
-            gap: 15px;
-            background: #fdfdfd;
-            background-image: linear-gradient(135deg, #ffffff 85%, #e8f8f5 100%);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            flex-direction: column;
+        }
+
+        .window-header {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: white;
+            padding: 6px 10px;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 3px;
+        }
+        .win-btn {
+            background: var(--bg-gray);
+            border: 1px solid #fff;
+            box-shadow: 1px 1px 1px #000;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            cursor: pointer;
+            line-height: 12px;
+        }
+
+        .window-body {
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .view-panel { 
+            display: none; 
+        }
+        .view-panel.active { 
+            display: block; 
+        }
+
+        .fieldset-box {
+            border: 2px groove #fff;
+            padding: 20px;
             position: relative;
         }
-        .id-photo-frame {
-            width: 100px;
-            height: 125px;
-            background: #e0e0e0;
-            border: 1px solid #999;
+        .fieldset-title {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--bg-gray);
+            padding: 0 5px;
+            font-weight: bold;
+            color: var(--window-teal);
+            font-size: 13px;
+        }
+
+        .form-grid {
+            display: flex;
+            gap: 20px;
+        }
+
+        .fields-side {
+            flex: 1;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .form-row label {
+            width: 160px;
+            font-weight: bold;
+            color: var(--window-teal);
+            font-size: 13px;
+            text-align: right;
+            padding-right: 15px;
+        }
+        .form-row input, .form-row select {
+            flex: 1;
+            padding: 4px 6px;
+            border: 2px inset #fff;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .photo-side {
+            width: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .photo-frame {
+            width: 130px;
+            height: 150px;
+            border: 2px inset #fff;
+            background: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
-        .id-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .id-card-details { flex: 1; font-size: 13px; line-height: 1.6; }
-        .id-card-details h3 { margin: 0 0 5px 0; color: var(--teal-color); font-size: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px; }
-        
-        .card-right-side {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-end;
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        .biometric-badge {
-            width: 45px;
-            height: 45px;
-            border: 1px solid var(--biometric-green);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            background: #fff;
-            color: var(--biometric-green);
-        }
-        .print-card-btn {
-            background: var(--teal-color);
-            color: white;
-            border: none;
+        .file-upload-btn {
+            background: var(--bg-gray);
+            border: 1px solid #808080;
             padding: 4px 8px;
             font-size: 11px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+        .win-save-btn {
+            padding: 6px 25px;
+            background: var(--bg-gray);
+            border: 2px solid;
+            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
             font-weight: bold;
             cursor: pointer;
-            text-transform: uppercase;
-        }
-        .print-card-btn:hover { background: #006666; }
-
-        @media print {
-            body * { visibility: hidden; }
-            .generated-id-card, .generated-id-card * { visibility: visible; }
-            .generated-id-card { position: absolute; left: 0; top: 0; width: 100%; border: 2px solid #008080 !important; box-shadow: none !important; }
-            .print-card-btn { display: none !important; }
+            font-size: 13px;
         }
 
-        /* স্ট্যাটাস এলার্ট নোটিফিকেশন */
-        .alert-status { padding: 10px; margin-top: 15px; display: none; font-weight: bold; border-left: 4px solid; }
-        .alert-success { background: #e8f5e9; color: #2e7d32; border-left-color: #2e7d32; }
-        .alert-danger { background: #ffebee; color: #c62828; border-left-color: #c62828; }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 2px inset #fff;
+        }
+        .report-table td {
+            padding: 8px;
+            border: 1px solid #d4d0c8;
+            font-size: 13px;
+        }
+        .report-table .label-cell {
+            background: #f0f0f0;
+            font-weight: bold;
+            color: var(--window-teal);
+            width: 150px;
+        }
+
+        .alert-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.2);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999;
+        }
+        .msg-box {
+            background: var(--bg-gray);
+            width: 320px;
+            border: 2px solid;
+            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.4);
+        }
+        .msg-body {
+            padding: 25px 20px;
+            font-size: 13px;
+            text-align: center;
+            color: #000;
+        }
+        .msg-footer {
+            padding-bottom: 15px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-<div class="main-wrapper">
-    <!-- বাম পাশের নেভিগেশন প্যানেল -->
-    <div class="left-panel">
-        <div id="btn-add" class="menu-btn active" onclick="switchTab('add-panel', this)">ADD EMPLOYEE</div>
-        <div id="btn-search" class="menu-btn" onclick="switchTab('search-panel', this)">SEARCH DATABASE</div>
-        <div id="btn-status" class="menu-btn" onclick="switchTab('status-panel', this)">SYSTEM STATUS</div>
-        <div class="menu-btn" onclick="handleLogout()">LOGOUT</div>
-    </div>
-
-    <!-- ডান পাশের কন্টেন্ট প্যানেল -->
-    <div class="right-panel">
-        <!-- ব্র্যান্ড হেডার সেকশন -->
-        <div class="header-section">
-            <img src="https://ibb.co" class="company-logo" alt="Logo">
-            <h2 class="company-name">Al-Mutawa Holding</h2>
-            <div class="contact-info">
-                AMSC Headquarter: P.O.Box. 9278, Dammam - 31413, Kingdom of Saudi Arabia<br>
-                Tel: +966 13 856 1169 | Fax: +966 13 850 2557 | Email: ahmutawa@almutawa.com.sa
+    <!-- পপ-আপ লগইনSecure উইন্ডো -->
+    <div id="login-alert" class="alert-overlay">
+        <div class="msg-box">
+            <div class="window-header">
+                <span>Login Secure</span>
+                <div class="window-controls"><div class="win-btn" onclick="closeAlert()">X</div></div>
+            </div>
+            <div class="msg-body">Welcome to Al-Mutawa Holding - AMSC Portal</div>
+            <div class="msg-footer">
+                <button type="button" class="win-save-btn" onclick="closeAlert()" style="padding: 4px 25px;">OK</button>
             </div>
         </div>
+    </div>
 
-        <!-- ১. কর্মচারী যোগ করার মডিউল (ADD EMPLOYEE) -->
-        <div id="add-panel" class="view-panel" style="display: block;">
-            <div class="form-section">
-                <div class="form-title">Add User Global Information</div>
-                <form id="employeeForm" onsubmit="processFormSubmission(event)">
-                    <div class="form-group">
-                        <label>Country :</label>
-                        <!-- আপনার চাওয়া ৪টি নির্দিষ্ট দেশ সরাসরি লোড করা হয়েছে -->
-                        <select id="empCountry" required>
-                            <option value="" disabled selected>Select Employee Country</option>
-                            <option value="Bangladesh">Bangladesh</option>
-                            <option value="India">India</option>
-                            <option value="Pakistan">Pakistan</option>
-                            <option value="Nepal">Nepal</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Full Name :</label>
-                        <input type="text" id="empName" required placeholder="Enter full legal name">
-                    </div>
-                    <div class="form-group">
-                        <label>Iqama / ID No :</label>
-                        <input type="text" id="empId" required placeholder="Enter 10-digit Iqama or National ID">
-                    </div>
-                    <div class="form-group">
-                        <label>Passport No :</label>
-                        <input type="text" id="empPassport" required placeholder="Enter passport number">
-                    </div>
-                    <div class="form-group">
-                        <label>Mobile No :</label>
-                        <input type="text" id="empMobile" required placeholder="e.g., +966 50 000 0000">
-                    </div>
-                    <div class="form-group">
-                        <label>Upload Photo :</label>
-                        <input type="file" id="empPhoto" accept="image/*" onchange="previewImageFile(this)">
-                    </div>
+    <!-- মূল অ্যাপ্লিকেশন উইন্ডো কাঠামো -->
+    <div class="window-wrapper">
+        
+        <!-- বামের প্যানেল -->
+        <div class="left-panel">
+            <div class="company-branding">
+                <img class="company-logo" src="https://unsplash.com" alt="AMSC Logo">
+                <h1 class="company-title">Al-Mutawa Holding</h1>
+                <span style="font-size:10px; font-weight:bold; color:#555;">AMSC SYSTEM</span>
+            </div>
 
-                    <!-- বায়োমেট্রিক ফিঙ্গারপ্রিন্ট রেজিস্ট্রেশন এরিয়া -->
-                    <div class="form-group">
-                        <label>Biometric Registration :</label>
-                        <div id="regScannerBox" class="fingerprint-scanner-box" onclick="triggerHardwareBiometric('register')">
-                            <span class="fp-icon" id="regFpIcon">☝️</span>
-                            <span id="regScannerText">Click to Connect & Scan Hardware Fingerprint</span>
-                        </div>
-                        <input type="hidden" id="biometricStatus" value="false">
-                    </div>
+            <!-- এটি এখন ডাইনামিক। ইউজার সার্চ বা সেভ করলে নাম ও রোল বদলে যাবে -->
+            <div id="dynamic-user-indicator" class="user-indicator">System: Guest Session</div>
+            
+            <button type="button" id="btn-add" class="menu-btn active" onclick="switchView('add-user-view')">Add New Employee</button>
+            <button type="button" id="btn-view" class="menu-btn" onclick="switchView('report-view')">Manage User / Bio</button>
 
-                    <button type="submit" class="save-btn">SAVE DETAILS & GENERATE ID</button>
-                </form>
+            <!-- সার্চ কন্টেইনার (Find Employee ID) -->
+            <div class="search-container">
+                <label for="search-id">Find Employee ID:</label>

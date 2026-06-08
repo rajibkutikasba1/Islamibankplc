@@ -164,3 +164,21 @@ app.delete('/api/admin/delete-account/:accNo', (req, res) => {
         res.status(404).json({ error: 'অ্যাকাউন্ট পাওয়া যায়নি!' });
     }
 });
+// সব অ্যাকাউন্টের ভেতর একটি নতুন 'messages' অ্যারে যোগ হবে
+accounts[accountNumber] = {
+    // ... আগের সব ডাটা ...
+    messages: [{ date: new Date().toLocaleString(), text: 'আপনার ইসলামী ব্যাংক পিএলসি অ্যাকাউন্টে স্বাগতম!' }]
+};
+
+// কোনো লেনদেন হলেই কাস্টমারকে মেসেজ পাঠানো
+function addMessage(accNo, text) {
+    if(accounts[accNo]) {
+        accounts[accNo].messages.push({ date: new Date().toLocaleString(), text });
+    }
+}
+
+// Deposit ফাংশনে এই লাইনটি যোগ করুন: 
+addMessage(accountNumber, `আপনার অ্যাকাউন্টে ${amount} টাকা জমা হয়েছে।`);
+
+// Withdraw ফাংশনে এই লাইনটি যোগ করুন:
+addMessage(accountNumber, `আপনার অ্যাকাউন্ট থেকে ${amount} টাকা উত্তোলন করা হয়েছে।`);

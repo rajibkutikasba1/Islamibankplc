@@ -1,184 +1,88 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ইসলামী ব্যাংক পিএলসি</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f1f5f9; margin: 0; padding: 15px; text-align: center; }
+        .container { max-width: 450px; background: white; margin: 15px auto; padding: 20px; border-radius: 15px; box-shadow: 0px 4px 15px rgba(0,0,0,0.1); border-top: 6px solid #006837; }
+        h2 { color: #006837; margin: 5px 0 15px 0; font-size: 24px; }
+        input, select { width: 92%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        button { width: 97%; padding: 12px; background-color: #006837; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #00522b; }
+        .tab-btn { width: 48%; display: inline-block; background-color: #e2e8f0; color: #333; margin-bottom: 15px; padding: 10px 0; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
+        .tab-btn.active { background-color: #006837; color: white; }
+        .profile-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #006837; display: block; margin: 10px auto; background: #eee; }
+        .data-box { text-align: left; background: #f8fafc; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 14px; border: 1px solid #e2e8f0; }
+        .statement-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; background: white; }
+        .statement-table th, .statement-table td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+        .statement-table th { background-color: #f1f5f9; color: #333; }
+        .action-area { background: #f0fdf4; padding: 12px; border-radius: 8px; margin-top: 15px; text-align: left; border: 1px solid #bbf7d0; }
+        .link-text { color: #006837; cursor: pointer; font-size: 13px; font-weight: bold; text-decoration: underline; display: inline-block; margin-top: 10px; }
+    </style>
+</head>
+<body>
 
-app.use(cors({ origin: '*' }));
-app.use(express.json());
+<div class="container" id="authContainer">
+    <h2>🏛️ ইসলামী ব্যাংক পিএলসি</h2>
+    <div id="tabDiv">
+        <button class="tab-btn active" id="loginTab" onclick="switchAuth('login')">লগইন করুন</button>
+        <button class="tab-btn" id="regTab" onclick="switchAuth('reg')">নতুন অ্যাকাউন্ট</button>
+    </div>
 
-// সব কাস্টমার ডেটা রাখার মূল ডাটাবেজ অবজেক্ট
-let accounts = {};
+    <div id="loginForm">
+        <input type="text" id="loginAcc" placeholder="অ্যাকাউন্ট নম্বর">
+        <input type="password" id="loginPin" placeholder="পিন বা পাসওয়ার্ড">
+        <button onclick="loginUser()">ড্যাশবোর্ডে প্রবেশ করুন</button>
+        <span class="link-text" onclick="switchAuth('forgot')">অ্যাকাউন্ট নম্বর ভুলে গেছেন?</span>
+    </div>
 
-app.get('/', (req, res) => res.send('🏛️ Islami Bank PLC Ultimate Server is Live!'));
+    <div id="regForm" style="display: none;">
+        <input type="text" id="name" placeholder="কাস্টমারের পুরো নাম">
+        <input type="text" id="phone" placeholder="মোবাইল নম্বর">
+        <input type="text" id="address" placeholder="বর্তমান ঠিকানা">
+        <input type="number" id="deposit" placeholder="প্রাথমিক জমা (টাকা)">
+        <input type="text" id="nominee" placeholder="নমিনির নাম">
+        <input type="password" id="password" placeholder="পিন সেট করুন">
+        <button onclick="createAccount()">অনলাইনে অ্যাকাউন্ট খুলুন</button>
+    </div>
 
-// ১. নতুন অ্যাকাউন্ট তৈরি করা
-app.post('/api/bank/create-account', (req, res) => {
-    const { name, phone, address, initialDeposit, nominee, customerImage, password } = req.body;
-    
-    if (!name || !phone || !address || !initialDeposit || !nominee || !password) {
-        return res.status(400).json({ error: 'সব তথ্য সঠিকভাবে দিন!' });
+    <div class="action-area" style="background: #fff1f2; border: 1px solid #fda4af;">
+        <h4 style="color: #9f1239; margin: 0;">🛡️ অ্যাডমিন এরিয়া</h4>
+        <button onclick="showAllAccounts()" style="background-color: #9f1239;">সকল কাস্টমার দেখুন</button>
+    </div>
+</div>
+
+<div class="container" id="adminContainer" style="display: none;">
+    <h2>📊 কাস্টমার ডাটাবেজ</h2>
+    <div id="adminList" class="data-box"></div>
+    <button onclick="location.reload()" style="background-color: #555;">ফিরে যান</button>
+</div>
+
+<script>
+    const BASE_URL = 'https://islamibankplc.onrender.com';
+
+    function switchAuth(type) {
+        document.getElementById('loginForm').style.display = (type === 'login') ? 'block' : 'none';
+        document.getElementById('regForm').style.display = (type === 'reg') ? 'block' : 'none';
+        document.getElementById('tabDiv').style.display = (type === 'forgot') ? 'none' : 'block';
     }
-    
-    // ৪ ডিজিটের একটি ইউনিক অ্যাকাউন্ট নম্বর তৈরি (যেমন: IB5421)
-    const accountNumber = 'IB' + Math.floor(1000 + Math.random() * 9000);
-    const now = new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' });
-    
-    accounts[accountNumber] = {
-        name,
-        phone,
-        address,
-        balance: Number(initialDeposit),
-        nominee,
-        customerImage: customerImage || 'https://www.w3schools.com/howto/img_avatar.png',
-        password,
-        statement: [{
-            type: 'অ্যাকাউন্ট খোলা হয়েছে',
-            amount: initialDeposit,
-            date: now,
-            details: `প্রাথমিক জমা সহ অ্যাকাউন্ট তৈরি সফল`
-        }]
-    };
-    
-    res.status(201).json({ accountNumber, name, message: 'অ্যাকাউন্ট তৈরি সফল!' });
-});
 
-// ২. লগইন করার API
-app.post('/api/bank/login', (req, res) => {
-    const { accountNumber, password } = req.body;
-    const account = accounts[accountNumber];
-    
-    if (!account || account.password !== password) {
-        return res.status(401).json({ error: 'অ্যাকাউন্ট নম্বর অথবা পিন ভুল!' });
+    async function showAllAccounts() {
+        try {
+            const res = await fetch(`${BASE_URL}/api/admin/all-accounts`);
+            const data = await res.json();
+            let html = '<table border="1" width="100%"><tr><th>নাম</th><th>অ্যাকাউন্ট</th><th>ব্যালেন্স</th></tr>';
+            for (let acc in data) {
+                html += `<tr><td>${data[acc].name}</td><td>${acc}</td><td>${data[acc].balance}</td></tr>`;
+            }
+            html += '</table>';
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('adminContainer').style.display = 'block';
+            document.getElementById('adminList').innerHTML = html;
+        } catch(e) { alert('সার্ভার থেকে ডেটা আনতে সমস্যা হচ্ছে!'); }
     }
-    
-    res.json({ accountNumber, ...account });
-});
-
-// ৩. 🔑 অ্যাকাউন্ট নম্বর ভুলে গেলে তা পুনরুদ্ধার করার API
-app.post('/api/bank/forgot-account', (req, res) => {
-    const { phone, password } = req.body;
-    
-    if (!phone || !password) {
-        return res.status(400).json({ error: 'মোবাইল নম্বর এবং পিন দিন!' });
-    }
-    
-    // মোবাইল নম্বর এবং পিন ম্যাচ করে অ্যাকাউন্ট নম্বর খুঁজে বের করা
-    const foundAccountNumber = Object.keys(accounts).find(accNo => 
-        accounts[accNo].phone === phone && accounts[accNo].password === password
-    );
-    
-    if (!foundAccountNumber) {
-        return res.status(404).json({ error: 'প্রদত্ত মোবাইল নম্বর এবং পিন দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি!' });
-    }
-    
-    res.json({ accountNumber: foundAccountNumber, name: accounts[foundAccountNumber].name });
-});
-
-// ৪. টাকা জমা (Deposit) করার API
-app.post('/api/bank/deposit', (req, res) => {
-    const { accountNumber, amount } = req.body;
-    const account = accounts[accountNumber];
-    
-    if (!account) return res.status(404).json({ error: 'অ্যাকাউন্ট পাওয়া যায়নি!' });
-    if (Number(amount) <= 0) return res.status(400).json({ error: 'সঠীক পরিমাণ লিখুন!' });
-    
-    account.balance += Number(amount);
-    const now = new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' });
-    
-    account.statement.push({
-        type: 'নগদ জমা',
-        amount: `+${amount}`,
-        date: now,
-        details: 'নিজস্ব অ্যাকাউন্ট থেকে ক্যাশ ইন'
-    });
-    
-    res.json({ balance: account.balance, statement: account.statement });
-});
-
-// ৫. টাকা উত্তোলন (Withdraw) করার API
-app.post('/api/bank/withdraw', (req, res) => {
-    const { accountNumber, amount, password } = req.body;
-    const account = accounts[accountNumber];
-    
-    if (!account || account.password !== password) return res.status(401).json({ error: 'পিন ভুল!' });
-    if (Number(amount) > account.balance) return res.status(400).json({ error: 'পর্যাপ্ত ব্যালেন্স নেই!' });
-    
-    account.balance -= Number(amount);
-    const now = new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' });
-    
-    account.statement.push({
-        type: 'নগদ উত্তোলন',
-        amount: `-${amount}`,
-        date: now,
-        details: 'এটিএম/ক্যাশ কাউন্টার থেকে উত্তোলন'
-    });
-    
-    res.json({ balance: account.balance, statement: account.statement });
-});
-
-// ৬. ফান্ড ট্রান্সফার (Fund Transfer) করার API
-app.post('/api/bank/transfer', (req, res) => {
-    const { senderAcc, receiverAcc, amount, password } = req.body;
-    const sender = accounts[senderAcc];
-    const receiver = accounts[receiverAcc];
-    
-    if (!sender || sender.password !== password) return res.status(401).json({ error: 'আপনার পিন ভুল!' });
-    if (!receiver) return res.status(404).json({ error: 'যাকে টাকা পাঠাবেন তার অ্যাকাউন্ট নম্বর পাওয়া যায়নি!' });
-    if (Number(amount) > sender.balance) return res.status(400).json({ error: 'পর্যাপ্ত ব্যালেন্স নেই!' });
-    
-    sender.balance -= Number(amount);
-    receiver.balance += Number(amount);
-    
-    const now = new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' });
-    
-    sender.statement.push({
-        type: 'টাকা পাঠানো হয়েছে',
-        amount: `-${amount}`,
-        date: now,
-        details: `প্রাপক অ্যাকাউন্ট: ${receiverAcc}`
-    });
-    
-    receiver.statement.push({
-        type: 'টাকা প্রাপ্তি',
-        amount: `+${amount}`,
-        date: now,
-        details: `প্রেরক অ্যাকাউন্ট: ${senderAcc}`
-    });
-    
-    res.json({ balance: sender.balance, statement: sender.statement });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running smoothly on port ${PORT}`));
-// ৬. অ্যাডমিন প্যানেল: সব কাস্টমার দেখার জন্য
-app.get('/api/admin/all-accounts', (req, res) => {
-    res.json(accounts);
-});
-
-// ৭. অ্যাডমিন প্যানেল: কাস্টমার ডিলিট বা ব্লক করার জন্য
-app.delete('/api/admin/delete-account/:accNo', (req, res) => {
-    const accNo = req.params.accNo;
-    if (accounts[accNo]) {
-        delete accounts[accNo];
-        res.json({ message: 'অ্যাকাউন্টটি ডিলিট করা হয়েছে!' });
-    } else {
-        res.status(404).json({ error: 'অ্যাকাউন্ট পাওয়া যায়নি!' });
-    }
-});
-// সব অ্যাকাউন্টের ভেতর একটি নতুন 'messages' অ্যারে যোগ হবে
-accounts[accountNumber] = {
-    // ... আগের সব ডাটা ...
-    messages: [{ date: new Date().toLocaleString(), text: 'আপনার ইসলামী ব্যাংক পিএলসি অ্যাকাউন্টে স্বাগতম!' }]
-};
-
-// কোনো লেনদেন হলেই কাস্টমারকে মেসেজ পাঠানো
-function addMessage(accNo, text) {
-    if(accounts[accNo]) {
-        accounts[accNo].messages.push({ date: new Date().toLocaleString(), text });
-    }
-}
-
-// Deposit ফাংশনে এই লাইনটি যোগ করুন: 
-addMessage(accountNumber, `আপনার অ্যাকাউন্টে ${amount} টাকা জমা হয়েছে।`);
-
-// Withdraw ফাংশনে এই লাইনটি যোগ করুন:
-addMessage(accountNumber, `আপনার অ্যাকাউন্ট থেকে ${amount} টাকা উত্তোলন করা হয়েছে।`);
+</script>
+</body>
+</html>

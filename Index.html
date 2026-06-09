@@ -2,105 +2,64 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ফেস বায়োমেট্রিক সিস্টেম</title>
+    <title>রাইহান ষ্টাডি সেন্টার</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f7f6; padding: 20px; }
-        .container { max-width: 450px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        button { width: 100%; padding: 12px; margin: 10px 0; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .btn-reg { background-color: #007bff; color: white; }
-        .btn-scan { background-color: #28a745; color: white; }
-        input { width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        #camera-box { width: 100%; max-width: 320px; height: 240px; background: #333; margin: 10px auto; border-radius: 8px; overflow: hidden; display: none; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        #result { margin-top: 20px; padding: 15px; border: 1px solid #ddd; background: #fafafa; display: none; text-align: left; }
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        input { width: 100%; padding: 8px; margin: 5px 0; }
+        button { width: 100%; padding: 10px; background: #28a745; color: white; border: none; cursor: pointer; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>📸 ফেস বায়োমেট্রিক অনুসন্ধান</h2>
-    <p>৫০০ জনের তথ্য ব্যবস্থাপনা প্যানেল (Nokia 3.4 ফিক্সড)</p>
-    
-    <input type="text" id="username" placeholder="ব্যবহারকারীর নাম/আইডি লিখুন">
-    
-    <div id="camera-box">
-        <video id="video" autoplay playsinline></video>
-    </div>
+    <h2>স্টুডেন্ট ডাটা এন্ট্রি</h2>
+    <input type="text" id="roll" placeholder="রোল নাম্বার">
+    <input type="text" id="name" placeholder="নাম">
+    <input type="text" id="mobile" placeholder="মোবাইল নাম্বার">
+    <button onclick="addStudent()">যোগ করুন</button>
 
-    <button class="btn-reg" id="registerBtn">চেহারা রেজিস্টার করুন</button>
     <hr>
-    <button class="btn-scan" id="scanBtn">চেহারা স্ক্যান করে তথ্য খুঁজুন</button>
+    <input type="text" id="searchInput" onkeyup="searchStudent()" placeholder="সার্চ করুন...">
 
-    <div id="result">
-        <h3>ব্যবহারকারীর তথ্য:</h3>
-        <p id="userInfo"></p>
-    </div>
+    <table id="studentTable">
+        <thead>
+            <tr><th>রোল</th><th>নাম</th><th>মোবাইল</th></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
 </div>
 
 <script>
-    const video = document.getElementById('video');
-    const cameraBox = document.getElementById('camera-box');
+    function addStudent() {
+        let roll = document.getElementById("roll").value;
+        let name = document.getElementById("name").value;
+        let mobile = document.getElementById("mobile").value;
 
-    // ক্যামেরা চালু করার ফাংশন
-    async function startCamera() {
-        cameraBox.style.display = 'block';
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-        video.srcObject = stream;
-    }
-
-    // ক্যামেরা বন্ধ করার ফাংশন
-    function stopCamera() {
-        const stream = video.srcObject;
-        if (stream) {
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
-        }
-        cameraBox.style.display = 'none';
-    }
-
-    // ১. ফেস রেজিস্ট্রেশন
-    document.getElementById('registerBtn').addEventListener('click', async () => {
-        const username = document.getElementById('username').value;
-        if (!username) return alert("অনুগ্রহ করে নাম বা আইডি লিখুন");
-
-        try {
-            await startCamera();
-            alert("ক্যামেরার দিকে তাকান, আপনার চেহারা সনাক্ত করা হচ্ছে...");
+        if(roll && name) {
+            let table = document.getElementById("tableBody");
+            let row = table.insertRow();
+            row.innerHTML = `<td>${roll}</td><td>${name}</td><td>${mobile}</td>`;
             
-            // ৩ সেকেন্ড পর ছবি ক্যাপচার ডেমো লজিক
-            setTimeout(() => {
-                stopCamera();
-                alert(`✅ সফলভাবে সার্ভারে ${username}-এর চেহারা রেজিস্টার হয়েছে!`);
-            }, 3000);
-
-        } catch (err) {
-            alert("ক্যামেরা পারমিশন পাওয়া যায়নি।");
+            // ইনপুট বক্স খালি করা
+            document.getElementById("roll").value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("mobile").value = "";
+        } else {
+            alert("রোল এবং নাম অবশ্যই দিন!");
         }
-    });
+    }
 
-    // ২. ফেস স্ক্যান ও তথ্য খোঁজা
-    document.getElementById('scanBtn').addEventListener('click', async () => {
-        try {
-            await startCamera();
-            alert("চেহারা মেলানো হচ্ছে, ক্যামেরার দিকে সোজা তাকিয়ে থাকুন...");
-
-            setTimeout(() => {
-                stopCamera();
-                document.getElementById('result').style.display = 'block';
-                document.getElementById('userInfo').innerHTML = `
-                    <b>নাম:</b> মোঃ আরিফ রহমান<br>
-                    <b>পদবী:</b> কর্মকর্তা<br>
-                    <b>আইডি নং:</b> EMP-500-3.4<br>
-                    <b>ডিভাইস স্ট্যাটাস:</b> Nokia 3.4 ফেস রিকগনিশন সফল।
-                `;
-            }, 3000);
-
-        } catch (err) {
-            alert("ক্যামেরা চালু করা যায়নি।");
+    function searchStudent() {
+        let filter = document.getElementById("searchInput").value.toUpperCase();
+        let rows = document.getElementById("tableBody").getElementsByTagName("tr");
+        for (let i = 0; i < rows.length; i++) {
+            let text = rows[i].textContent || rows[i].innerText;
+            rows[i].style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
         }
-    });
+    }
 </script>
-
 </body>
 </html>

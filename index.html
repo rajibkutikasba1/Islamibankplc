@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ইসলামী ব্যাংক পিএলসি - ডিজিটাল ব্যাংকিং</title>
+    <style>
+        :root {
+            --primary: #008753;       /* ইসলামী ব্যাংকের চিরচেনা সবুজ */
+            --primary-dark: #005c38;
+            --accent: #d4af37;        /* গোল্ডেন কালার */
+            --bg-gradient: linear-gradient(135deg, #f5f7f6 0%, #e4ece7 100%);
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-sub: #718096;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .banking-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 135, 83, 0.15);
+            overflow: hidden;
+            border: 1px solid rgba(0, 135, 83, 0.1);
+        }
+
+        /* ব্যাংক হেডার */
+        .bank-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .bank-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .bank-header p {
+            font-size: 12px;
+            color: var(--accent);
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* প্রগ্রেস বার (ধাপগুলো বোঝার জন্য) */
+        .progress-bar {
+            display: flex;
+            background: #edf2f7;
+            height: 6px;
+        }
+
+        .progress-step {
+            flex: 1;
+            background: #edf2f7;
+            transition: background 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: var(--primary);
+        }
+
+        /* মূল ইন্টারফেস এরিয়া */
+        .content {
+            padding: 25px 20px;
+        }
+
+        /* ইন্টারফেস পার্টগুলো (ডিফল্টভাবে প্রথমটা ছাড়া সব লুকানো থাকবে) */
+        .interface-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .interface-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+            padding-left: 8px;
+        }
+
+        /* ইনপুট ফর্ম ডিজাইন */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            background: #f8fafc;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 135, 83, 0.1);
+        }
+
+        /* বাটন গ্রুপ */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 135, 83, 0.2);
+        }
+
+        .btn-next:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 135, 83, 0.3);
+        }
+
+        .btn-prev {
+            background: #edf2f7;
+            color: var(--text-main);
+        }
+
+        .btn-print {
+            background: var(--accent);
+            color: var(--primary-dark);
+            width: 100%;
+        }
+
+        /* ট্রানজেকশন স্লিপ স্টাইল */
+        .receipt-box {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .receipt-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* প্রিন্ট লেআউট */
+        @media print {
+            body { background: white; padding: 0; }
+            .banking-container { box-shadow: none; border: none; max-width: 100%; }
+            .btn-group, .progress-bar { display: none !important; }
+            .interface-section { display: none !important; }
+            #step6 { display: block !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banking-container">
+        <div class="bank-header">
+            <h1>ISLAMI BANK BANGLADESH PLC</h1>
+            <p>ইসলামী ব্যাংকিং - আলোর কাফেলা</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-step active" id="p1"></div>
+            <div class="progress-step" id="p2"></div>
+            <div class="progress-step" id="p3"></div>
+            <div class="progress-step" id="p4"></div>
+            <div class="progress-step" id="p5"></div>
+            <div class="progress-step" id="p6"></div>
+        </div>
+
+        <div class="content">
+
+            <div class="interface-section active" id="step1">
+                <div class="section-title">১. কাষ্টমার একাউন্ট তৈরি</div>
+                <div class="form-group">
+                    <label>একাউন্ট নাম্বার (Account Number)</label>
+                    <input type="number" id="accNumber" placeholder="যেমন: ২০৫০XXXXXXXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label>একাউন্টের ধরন (Account Type)</label>
+                    <select id="accType">
+                        <option value="">সিলেক্ট করুন</option>
+                        <option value="Mudaraba Savings">মুদারাবা সঞ্চয়ী (Savings)</option>
+                        <option value="Current Account">চলতি হিসাব (Current)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="interface-section" id="step2">
+                <div class="section-title">২. কাষ্টমার ইনফরমেশন</div>
+                <div class="form-group">
+                    <label>গ্রাহকের নাম (Customer Name)</label>
+                    <input type="text" id="custName" placeholder="নাম লিখুন">
+                </div>
+                <div class="form-group">
+                    <label>মোবাইল নাম্বার (Mobile Number)</label>
+                    <input type="tel" id="custPhone" placeholder="মোবাইল নাম্বার লিখুন">
+                </div>
+                <div class="form-group">
+                    <label>জাতীয় পরিচয়পত্র নং (NID)</label>
+                    <input type="number" id="custNid" placeholder="NID নাম্বার লিখুন">
+                </div>
+            </div>
+
+            <div class="interface-section" id="step3">
+                <div class="section-title">৩. ক্যাশ ডিপোজিট (জমা)</div>
+                <div class="form-group">
+                    <label>জমার পরিমাণ (Deposit Amount)</label>
+                    <input type="number" id="depositAmt" placeholder="৳ ০.০০">
+                </div>
+                <div class="form-group">
+                    <label>জমা প্রদানকারীর নাম</label>
+                    <input type="text" id="depositorName" placeholder="যিনি টাকা জমা দিচ্ছেন">
+                </div>
+            </div>
+
+            <div class="interface-section" id="step4">
+                <div class="section-title">৪. ক্যাশ আউট (উত্তোলন)</div>
+                <div class="form-group">
+                    <label>উত্তোলনের পরিমাণ (Withdraw Amount)</label>
+                    <input type="number" id="withdrawAmt" placeholder="৳ ০.০০">
+                </div>
+                <div class="form-group">
+                    <label>চেক নাম্বার (Cheque Number)</label>
+                    <input type="text" id="chequeNo" placeholder="চেক বইয়ের পাতা নম্বর">
+                </div>
+            </div>
+
+            <div class="interface-section" id="step5">
+                <div class="section-title">৫. কাষ্টমার ট্রানজাক্সেন ওভারভিউ</div>
+                <div class="receipt-box">
+                    <div class="receipt-row"><span>একাউন্ট নং:</span> <span id="viewAcc"></span></div>
+                    <div class="receipt-row"><span>গ্রাহকের নাম:</span> <span id="viewName"></span></div>
+                    <div class="receipt-row"><span>মোট জমা:</span> <span id="viewDeposit" style="color: green;">৳ ০</span></div>
+                    <div class="receipt-row"><span>মোট উত্তোলন:</span> <span id="viewWithdraw" style="color: red;">৳ ০</span></div>
+                    <div class="receipt-row"><span>বর্তমান ব্যালেন্স:</span> <span id="viewBalance">৳ ০</span></div>
+                </div>
+            </div>
+
+            <div class="interface-section" id="step6">
+                <div class="section-title">৬. ফাইনাল রিসিট ও প্রিন্ট</div>
+                <p style="text-align: center; margin-bottom: 20px; font-size: 14px; color: var(--text-sub);">
+                    সব তথ্য ঠিক থাকলে নিচের প্রিন্ট বাটনে ক্লিক করে স্লিপটি প্রিন্ট করুন।
+                </p>
+                <button class="btn btn-print" onclick="window.print()">🖨️ প্রিন্ট স্লিপ (Print Slip)</button>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-prev" id="prevBtn" onclick="changeStep(-1)" style="display: none;">পেছনে</button>
+                <button class="btn btn-next" id="nextBtn" onclick="changeStep(1)">পরবর্তী ধাপ</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 6;
+
+        function changeStep(direction) {
+            // যদি আমরা ৫ নম্বর ধাপে যাই, তবে আগের সব ডেটা প্রসেস করে ট্রানজেকশনে দেখাবো
+            if (direction === 1 && currentStep === 4) {
+                updateTransactionSummary();
+            }
+
+            // বর্তমান সেকশন লুকানো
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`p${currentStep}`).classList.remove('active');
+
+            // নতুন ধাপে যাওয়া
+            currentStep += direction;
+
+            // নতুন সেকশন দেখানো
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            
+            // প্রগ্রেস বার আপডেট
+            for(let i=1; i<=currentStep; i++) {
+                document.getElementById(`p${i}`).classList.add('active');
+            }
+
+            // বাটন কন্ট্রোল
+            if (currentStep === 1) {
+                document.getElementById('prevBtn').style.display = 'none';
+            } else {
+                document.getElementById('prevBtn').style.display = 'block';
+            }
+
+            if (currentStep === totalSteps) {
+                document.getElementById('nextBtn').style.display = 'none';
+            } else {
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('nextBtn').innerText = 'পরবর্তী ধাপ';
+            }
+        }
+
+        function updateTransactionSummary() {
+            // ইনপুট থেকে ডেটা পড়া
+            const acc = document.getElementById('accNumber').value || '---';
+            const name = document.getElementById('custName').value || '---';
+            const deposit = Number(document.getElementById('depositAmt').value) || 0;
+            const withdraw = Number(document.getElementById('withdrawAmt').value) || 0;
+            const balance = deposit - withdraw;
+
+            // ট্রানজেকশন স্ক্রিনে ডেটা বসানো
+            document.getElementById('viewAcc').innerText = acc;
+            document.getElementById('viewName').innerText = name;
+            document.getElementById('viewDeposit').innerText = '৳ ' + deposit.toLocaleString();
+            document.getElementById('viewWithdraw').innerText = '৳ ' + withdraw.toLocaleString();
+            document.getElementById('viewBalance').innerText = '৳ ' + balance.toLocaleString();
+        }
+    </script>
+</body>
+</html>

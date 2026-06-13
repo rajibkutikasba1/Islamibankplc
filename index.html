@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Mobile Repair Inventory</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .box { width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; }
+        input, select { width: 95%; margin: 5px 0; padding: 8px; }
+        button { padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; }
+        .print-area { display: none; margin-top: 20px; border: 2px dashed #000; padding: 10px; }
+        @media print { .no-print { display: none; } .print-area { display: block; } }
+    </style>
+</head>
+<body>
+
+<div class="box no-print">
+    <h3>মোবাইল রিপেয়ার এন্ট্রি</h3>
+    <input type="text" id="imei" placeholder="IMEI নাম্বার (স্ক্যান করুন)" onchange="loadData()">
+    <input type="text" id="model" placeholder="মোবাইল মডেল">
+    <select id="problem">
+        <option value="">সমস্যা সিলেক্ট করুন</option>
+        <option value="ডিসপ্লে">ডিসপ্লে সমস্যা</option>
+        <option value="চার্জিং">চার্জিং পোর্ট সমস্যা</option>
+        <option value="ব্যাটারি">ব্যাটারি সমস্যা</option>
+        <option value="সফটওয়্যার">সফটওয়্যার/হ্যাং</option>
+    </select>
+    <input type="text" id="customerName" placeholder="কাস্টমারের নাম">
+    <input type="text" id="customerPhone" placeholder="মোবাইল নাম্বার">
+    <input type="number" id="price" placeholder="রিপেয়ার প্রাইস">
+    <button onclick="saveAndPrint()">সেভ ও প্রিন্ট করুন</button>
+</div>
+
+<div id="printSection" class="print-area">
+    <h3>রিসিট: মোবাইল সার্ভিসিং</h3>
+    <p><b>কাস্টমার:</b> <span id="pName"></span></p>
+    <p><b>ফোন:</b> <span id="pPhone"></span></p>
+    <p><b>মডেল:</b> <span id="pModel"></span></p>
+    <p><b>সমস্যা:</b> <span id="pProblem"></span></p>
+    <p><b>প্রাইস:</b> <span id="pPrice"></span> টাকা</p>
+    <p>ধন্যবাদ আমাদের সার্ভিস নেওয়ার জন্য!</p>
+</div>
+
+<script>
+    function saveAndPrint() {
+        document.getElementById('pName').innerText = document.getElementById('customerName').value;
+        document.getElementById('pPhone').innerText = document.getElementById('customerPhone').value;
+        document.getElementById('pModel').innerText = document.getElementById('model').value;
+        document.getElementById('pProblem').innerText = document.getElementById('problem').value;
+        document.getElementById('pPrice').innerText = document.getElementById('price').value;
+        
+        // ডাটা ব্রাউজারে সেভ হবে
+        let data = { model: document.getElementById('model').value };
+        localStorage.setItem("imei_" + document.getElementById('imei').value, JSON.stringify(data));
+        
+        window.print();
+    }
+
+    function loadData() {
+        let imei = document.getElementById('imei').value;
+        let d = JSON.parse(localStorage.getItem("imei_" + imei));
+        if(d) document.getElementById('model').value = d.model;
+    }
+</script>
+
+</body>
+</html>
